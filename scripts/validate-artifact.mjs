@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { existsSync } from 'node:fs';
 import { resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -12,6 +13,7 @@ const [source, manifest] = await Promise.all([
   readFile(manifestPath, "utf8"),
 ]);
 JSON.parse(manifest);
+assert.equal(existsSync(resolve(projectRoot,'dist/client/atendimento.html')),false,'Private HTML must not be published as a static asset');
 
 // A data URL forces ESM parsing even though the generated output has no package.json.
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;

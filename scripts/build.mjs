@@ -4,7 +4,7 @@ const root=process.cwd(), dist=resolve(root,'dist');
 if (!dist.startsWith(root + '\\') && !dist.startsWith(root + '/')) throw new Error('Unsafe build path');
 rmSync(dist,{recursive:true,force:true}); mkdirSync(dist+'/server',{recursive:true}); mkdirSync(dist+'/.openai',{recursive:true});
 cpSync('public',dist+'/client',{recursive:true});
-const attendanceSource=readFileSync('worker/atendimento.js','utf8').replace("import knowledge from './base-atendimento.json' with {type:'json'};",'const knowledge = '+readFileSync('worker/base-atendimento.json','utf8')+';').replace('export const statuses','const statuses').replace('export async function attendance','async function attendance');
+const attendanceSource=readFileSync('worker/atendimento.js','utf8').replace("import privatePage from './atendimento-page.js';",readFileSync('worker/atendimento-page.js','utf8').replace('export default','const privatePage =')).replace("import knowledge from './base-atendimento.json' with {type:'json'};",'const knowledge = '+readFileSync('worker/base-atendimento.json','utf8')+';').replace('export const statuses','const statuses').replace('export async function attendance','async function attendance');
 const source=readFileSync('worker/index.js','utf8').replace("import catalog from './catalog.json' with { type: 'json' };",'const catalog = '+readFileSync('worker/catalog.json','utf8')+';').replace("import {attendance} from './atendimento.js';",'const attendance = (() => {\n'+attendanceSource+'\nreturn attendance;\n})();');
 writeFileSync(dist+'/server/index.js',source);
 cpSync('.openai/hosting.json',dist+'/.openai/hosting.json'); cpSync('drizzle',dist+'/.openai/drizzle',{recursive:true});

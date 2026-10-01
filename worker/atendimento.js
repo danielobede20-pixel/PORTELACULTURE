@@ -1,4 +1,5 @@
 import knowledge from './base-atendimento.json' with {type:'json'};
+import privatePage from './atendimento-page.js';
 export const statuses=['novo','em_atendimento','aguardando_retorno','concluido','arquivado'];
 const headers={'cache-control':'private, no-store','vary':'Cookie','x-content-type-options':'nosniff'};
 const json=(body,status=200)=>Response.json(body,{status,headers});
@@ -9,7 +10,7 @@ export async function attendance(request,env,catalog){
  if(!email||!identity) return page ? new Response(null,{status:302,headers:{...headers,location:'/signin-with-chatgpt?return_to=%2Fatendimento'}}) : json({error:'Entre com sua conta ChatGPT.'},401);
  if(!env.PORTELA_ADMIN_EMAIL) return json({error:'O acesso privado ainda não foi configurado.'},503);
  if(email!==env.PORTELA_ADMIN_EMAIL.trim().toLowerCase())return json({error:'Esta conta não tem acesso ao atendimento da Portela.'},403);
- if(page){if(request.method!=='GET')return json({error:'Método não permitido.'},405); if(!env.ASSETS)return json({error:'Página indisponível.'},503); const response=await env.ASSETS.fetch(new Request(new URL('/atendimento.html',url),{method:'GET'})); const h=new Headers(response.headers);Object.entries(headers).forEach(([k,v])=>h.set(k,v));return new Response(response.body,{status:response.status,headers:h});}
+ if(page){if(request.method!=='GET')return json({error:'Método não permitido.'},405);return new Response(privatePage,{headers:{...headers,'content-type':'text/html; charset=utf-8'}});}
  if(path==='/api/atendimento/base'&&request.method==='GET')return json({...knowledge,produtos:catalog});
  if(!env.DB)return json({error:'A base está indisponível. Tente novamente.'},503);
  try{
