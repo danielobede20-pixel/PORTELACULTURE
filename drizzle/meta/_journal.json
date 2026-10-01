@@ -15,6 +15,13 @@
       "when": 1790892551949,
       "tag": "0001_cool_micromax",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790895938059,
+      "tag": "0002_old_micromax",
+      "breakpoints": true
     }
   ]
 }

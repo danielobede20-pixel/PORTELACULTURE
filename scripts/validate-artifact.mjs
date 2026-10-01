@@ -32,3 +32,7 @@ const knowledgeResponse=await workerModule.default.fetch(authenticated,{PORTELA_
 assert.equal(knowledgeResponse.status,200);
 const knowledge=await knowledgeResponse.json();assert.equal(knowledge.produtos.length,390);assert.equal(knowledge.ia_ativa,false);
 console.log('Built attendance protection and knowledge routes verified');
+assert.deepEqual(await (await workerModule.default.fetch(new Request(origin+'/api/ia'),{})).json(),{enabled:false});
+const aiRequest=new Request(origin+'/api/ia',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({messages:['Quero ASICS']})});
+assert.equal((await workerModule.default.fetch(aiRequest,{})).status,503);
+console.log('Built AI route fails closed when disabled');

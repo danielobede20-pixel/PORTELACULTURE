@@ -6,6 +6,7 @@ rmSync(dist,{recursive:true,force:true}); mkdirSync(dist+'/server',{recursive:tr
 cpSync('public',dist+'/client',{recursive:true});
 const attendanceSource=readFileSync('worker/atendimento.js','utf8').replace("import privatePage from './atendimento-page.js';",readFileSync('worker/atendimento-page.js','utf8').replace('export default','const privatePage =')).replace("import knowledge from './base-atendimento.json' with {type:'json'};",'const knowledge = '+readFileSync('worker/base-atendimento.json','utf8')+';').replace('export const statuses','const statuses').replace('export async function attendance','async function attendance');
 const source=readFileSync('worker/index.js','utf8').replace("import catalog from './catalog.json' with { type: 'json' };",'const catalog = '+readFileSync('worker/catalog.json','utf8')+';').replace("import {attendance} from './atendimento.js';",'const attendance = (() => {\n'+attendanceSource+'\nreturn attendance;\n})();');
-writeFileSync(dist+'/server/index.js',source);
+const ai=readFileSync('worker/ia.js','utf8').replace('export async function assistant','async function assistant');
+writeFileSync(dist+'/server/index.js',source.replace("import {assistant} from './ia.js';",'const assistant = (() => {\n'+ai+'\nreturn assistant;\n})();'));
 cpSync('.openai/hosting.json',dist+'/.openai/hosting.json'); cpSync('drizzle',dist+'/.openai/drizzle',{recursive:true});
 console.log('Built Worker, catalog assets and D1 migrations');

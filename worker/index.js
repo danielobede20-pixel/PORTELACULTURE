@@ -1,5 +1,6 @@
 import catalog from './catalog.json' with { type: 'json' };
 import {attendance} from './atendimento.js';
+import {assistant} from './ia.js';
 const choices = {category:['tenis','roupas','acessorios'],use:['treino','casual','lifestyle'],brand:['Nike','New Balance','Adidas','ASICS','On','Vans','Puma','Outra','Sem preferencia'],availability:['pronta_entrega','encomenda','sem_preferencia'],intent:['agora','opcoes']};
 const sources = ['instagram','direto','quiz','whatsapp','outros'];
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
@@ -19,6 +20,7 @@ export default {
  async fetch(request,env) {
   const url = new URL(request.url);
   let path;try{path=decodeURIComponent(url.pathname);}catch{return json({error:'Endereço inválido.'},400);}
+  if(path==='/api/ia')return assistant(request,env,catalog);
   if (['/atendimento','/atendimento/','/atendimento.html'].includes(path)||path==='/api/atendimento'||path.startsWith('/api/atendimento/'))return attendance(request,env,catalog);
   if (url.pathname !== '/api/interesses') {
    if (url.pathname.startsWith('/api/')) return json({error:'Não encontrado.'},404);

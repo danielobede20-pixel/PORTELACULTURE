@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
+export const iaUso = sqliteTable('ia_uso',{id:text('id').primaryKey(),quantidade:integer('quantidade').notNull().default(0)});
 export const interesses = sqliteTable('interesses', {
  id: text('id').primaryKey(), sessao: text('sessao').notNull(), criadoEm: text('criado_em').notNull(),
  tipo: text('tipo').notNull(), origem: text('origem').notNull(), entrada: text('pagina_entrada').notNull(), pagina: text('pagina_atual').notNull(), posicionamento: text('posicionamento').notNull(),

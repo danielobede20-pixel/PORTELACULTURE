@@ -3,3 +3,4 @@ dist/
 .sites-runtime/
 .wrangler/
 *.sqlite*
+.env.local

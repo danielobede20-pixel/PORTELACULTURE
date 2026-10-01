@@ -11,7 +11,7 @@ export async function attendance(request,env,catalog){
  if(!env.PORTELA_ADMIN_EMAIL) return json({error:'O acesso privado ainda não foi configurado.'},503);
  if(email!==env.PORTELA_ADMIN_EMAIL.trim().toLowerCase())return json({error:'Esta conta não tem acesso ao atendimento da Portela.'},403);
  if(page){if(request.method!=='GET')return json({error:'Método não permitido.'},405);return new Response(privatePage,{headers:{...headers,'content-type':'text/html; charset=utf-8'}});}
- if(path==='/api/atendimento/base'&&request.method==='GET')return json({...knowledge,produtos:catalog});
+ if(path==='/api/atendimento/base'&&request.method==='GET')return json({...knowledge,ia_ativa:env.PORTELA_IA_ENABLED==='1'&&Boolean(env.OPENAI_API_KEY),produtos:catalog});
  if(!env.DB)return json({error:'A base está indisponível. Tente novamente.'},503);
  try{
   if(path==='/api/atendimento'&&request.method==='GET'){
