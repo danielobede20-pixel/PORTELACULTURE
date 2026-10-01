@@ -6,15 +6,19 @@
   const targets = document.querySelectorAll('.manifesto .wrap, .section-title, .lead, .journeys a, .category, .steps li, .cta-box, .brands');
   function updateHero() {
     frame = 0;
-    if (!preference.matches && hero.getBoundingClientRect().bottom > 0) {
-      hero.style.setProperty('--hero-shift', Math.min(scrollY * .12, 64) + 'px');
-    }
+    if (preference.matches) return;
+    const bounds = hero.getBoundingClientRect();
+    const distance = hero.offsetHeight - document.querySelector('.brand-stage').offsetHeight;
+    const progress = Math.max(0, Math.min(1, (88 - bounds.top) / Math.max(1, distance)));
+    hero.style.setProperty('--brand-scale', String(1 + progress * .065));
+    hero.style.setProperty('--brand-glow', String(progress * .7));
   }
   function onScroll() { if (!frame && !preference.matches) frame = requestAnimationFrame(updateHero); }
   function configure() {
     observer?.disconnect();
     targets.forEach(element => element.classList.remove('pending'));
-    hero.style.removeProperty('--hero-shift');
+    hero.style.removeProperty('--brand-scale');
+    hero.style.removeProperty('--brand-glow');
     if (preference.matches || !('IntersectionObserver' in window)) return;
     observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -35,6 +39,7 @@
     updateHero();
   }
   addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
   preference.addEventListener('change', configure);
   configure();
 })();
