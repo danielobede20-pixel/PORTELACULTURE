@@ -1,0 +1,12 @@
+import {createServer} from 'node:http';
+import {readFileSync,existsSync,statSync} from 'node:fs';
+import {resolve,extname} from 'node:path';
+import {DatabaseSync} from 'node:sqlite';
+import worker from '../worker/index.js';
+const sql=new DatabaseSync(':memory:');
+for(const e of JSON.parse(readFileSync('drizzle/meta/_journal.json')).entries)sql.exec(readFileSync('drizzle/'+e.tag+'.sql','utf8'));
+const DB={prepare(q){let values=[];return {bind(...args){values=args;return this;},async run(){return sql.prepare(q).run(...values);},async first(){return sql.prepare(q).get(...values)||null;}};}};
+const root=resolve('public'),mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.webp':'image/webp','.png':'image/png','.svg':'image/svg+xml'};
+const ASSETS={async fetch(r){const u=new URL(r.url);let filename=resolve(root,'.'+decodeURIComponent(u.pathname));if(filename===root)filename=resolve(root,'index.html');if(!filename.startsWith(root+'\\')&&!filename.startsWith(root+'/'))return new Response('Not found',{status:404});if(!existsSync(filename)||!statSync(filename).isFile())return new Response('Not found',{status:404});return new Response(readFileSync(filename),{headers:{'content-type':mime[extname(filename)]||'application/octet-stream'}});}};
+const port=Number(process.argv[2]||8770),unavailable=process.argv.includes('--db-unavailable');
+createServer(async(req,res)=>{try{const chunks=[];for await(const chunk of req)chunks.push(chunk);const r=new Request('http://'+req.headers.host+req.url,{method:req.method,headers:req.headers,...(!['GET','HEAD'].includes(req.method)?{body:Buffer.concat(chunks)}:{})});const result=await worker.fetch(r,{DB:unavailable?null:DB,ASSETS});res.writeHead(result.status,Object.fromEntries(result.headers));res.end(Buffer.from(await result.arrayBuffer()));}catch(error){res.writeHead(500);res.end('Preview error');console.error(error);}}).listen(port,'127.0.0.1',()=>console.log('Portela preview http://127.0.0.1:'+port+' (local SQLite only)'));

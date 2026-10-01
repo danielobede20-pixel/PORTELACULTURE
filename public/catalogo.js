@@ -12,14 +12,12 @@ const sizeInput = document.querySelector('#pedido-tamanho'), cityInput = documen
 function productURL(p) { const url = new URL(location.pathname, location.origin); url.searchParams.set('produto', p.id); url.hash = 'catalogo'; return url.href; }
 function updateOrder() {
   if (!selectedProduct) return;
-  const parts = [`Olá! Quero consultar ${selectedProduct.nome}, referência ${selectedProduct.id}.`];
-  if (sizeInput.value.trim()) parts.push('Numeração desejada: ' + sizeInput.value.trim());
-  if (cityInput.value.trim()) parts.push('Cidade / UF: ' + cityInput.value.trim());
-  parts.push('Podem confirmar preço, disponibilidade, frete, pagamento e prazo?', productURL(selectedProduct));
-  document.querySelector('#order').href = 'https://wa.me/5561995158424?text=' + encodeURIComponent(parts.join('\n'));
+  document.querySelector('#order').href = Portela.link({product:selectedProduct,url:productURL(selectedProduct),size:sizeInput.value,city:cityInput.value});
 }
 sizeInput.addEventListener('input', updateOrder);
 cityInput.addEventListener('input', updateOrder);
+document.addEventListener('portela-preferences', updateOrder);
+dialog.addEventListener('close', () => { selectedProduct=null; Portela.setProduct(null); });
 document.querySelector('#pedido-form').addEventListener('submit', e => e.preventDefault());
 const normalize = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 function matches(p) {
@@ -34,6 +32,7 @@ function updateModels() {
 }
 function showProduct(p) {
   selectedProduct = p;
+  Portela.setProduct(p);
   sizeInput.value = ''; cityInput.value = '';
   document.querySelector('#product-title').textContent = p.nome;
   document.querySelector('#product-ref').textContent = 'Referência ' + p.id;

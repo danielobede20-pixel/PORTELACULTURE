@@ -1,0 +1,10 @@
+import {cpSync,mkdirSync,readFileSync,writeFileSync,rmSync} from 'node:fs';
+import {resolve} from 'node:path';
+const root=process.cwd(), dist=resolve(root,'dist');
+if (!dist.startsWith(root + '\\') && !dist.startsWith(root + '/')) throw new Error('Unsafe build path');
+rmSync(dist,{recursive:true,force:true}); mkdirSync(dist+'/server',{recursive:true}); mkdirSync(dist+'/.openai',{recursive:true});
+cpSync('public',dist+'/client',{recursive:true});
+const source=readFileSync('worker/index.js','utf8').replace("import catalog from './catalog.json' with { type: 'json' };",'const catalog = '+readFileSync('worker/catalog.json','utf8')+';');
+writeFileSync(dist+'/server/index.js',source);
+cpSync('.openai/hosting.json',dist+'/.openai/hosting.json'); cpSync('drizzle',dist+'/.openai/drizzle',{recursive:true});
+console.log('Built Worker, catalog assets and D1 migrations');
