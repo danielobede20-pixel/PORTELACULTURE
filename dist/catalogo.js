@@ -6,7 +6,7 @@ nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); menu.focus(); } });
 nav.addEventListener('keydown', e => { if (e.key !== 'Tab' || !nav.classList.contains('open')) return; const links = [...nav.querySelectorAll('a')]; if (!e.shiftKey && e.target === links.at(-1)) { e.preventDefault(); menu.focus(); } if (e.shiftKey && e.target === links[0]) { e.preventDefault(); menu.focus(); } });
 menu.addEventListener('keydown', e => { if (e.key === 'Tab' && nav.classList.contains('open')) { e.preventDefault(); (e.shiftKey ? nav.querySelector('a:last-child') : nav.querySelector('a')).focus(); } });
-const products = document.querySelector('#products'), status = document.querySelector('#resultado'), search = document.querySelector('#busca'), model = document.querySelector('#modelo'), more = document.querySelector('#mais'), dialog = document.querySelector('#produto');
+const products = document.querySelector('#products'), status = document.querySelector('#resultado'), search = document.querySelector('#busca'), brand = document.querySelector('#marca'), model = document.querySelector('#modelo'), more = document.querySelector('#mais'), dialog = document.querySelector('#produto');
 let data = [], shown = 12, selectedProduct = null;
 const sizeInput = document.querySelector('#pedido-tamanho'), cityInput = document.querySelector('#pedido-cidade');
 function productURL(p) { const url = new URL(location.pathname, location.origin); url.searchParams.set('produto', p.id); url.hash = 'catalogo'; return url.href; }
@@ -22,7 +22,16 @@ sizeInput.addEventListener('input', updateOrder);
 cityInput.addEventListener('input', updateOrder);
 document.querySelector('#pedido-form').addEventListener('submit', e => e.preventDefault());
 const normalize = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-function matches(p) { const name = normalize(p.nome); return normalize(p.nome + ' ' + p.id).includes(normalize(search.value.trim())) && (!model.value || (model.value === 'sb' ? name.includes('dunk') && name.includes('sb') : model.value === 'high' ? name.includes('dunk') && name.includes('high') : name.includes('dunk') && name.includes('low') && !name.includes('sb'))); }
+function matches(p) {
+  const name = normalize(p.nome);
+  const inLine = !model.value || (model.value.startsWith('nb:') ? p.marca === 'New Balance' && p.linha === model.value.slice(3) : p.marca === 'Nike' && name.includes('dunk') && (model.value === 'sb' ? name.includes('sb') : model.value === 'high' ? name.includes('high') : name.includes('low') && !name.includes('sb')));
+  return (!brand.value || p.marca === brand.value) && inLine && normalize(p.nome + ' ' + p.id + ' ' + p.marca).includes(normalize(search.value.trim()));
+}
+function updateModels() {
+  model.replaceChildren(new Option('Todas as linhas', ''));
+  if (!brand.value || brand.value === 'Nike') [['Dunk SB','sb'],['Dunk Low','low'],['Dunk High','high']].forEach(([label,value]) => model.add(new Option(label,value)));
+  if (!brand.value || brand.value === 'New Balance') [...new Set(data.filter(p => p.marca === 'New Balance').map(p => p.linha))].sort((a,b) => a.localeCompare(b, 'pt-BR', {numeric:true})).forEach(line => model.add(new Option('New Balance ' + line, 'nb:' + line)));
+}
 function showProduct(p) {
   selectedProduct = p;
   sizeInput.value = ''; cityInput.value = '';
@@ -45,14 +54,15 @@ function render() {
   more.hidden = filtered.length <= shown;
 }
 search.addEventListener('input', () => { shown = 12; render(); });
+brand.addEventListener('change', () => { shown = 12; updateModels(); render(); });
 model.addEventListener('change', () => { shown = 12; render(); });
 more.addEventListener('click', () => { shown += 12; render(); });
 dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
 fetch('catalogo.json').then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
-  data = items; render();
+  data = items; updateModels(); render();
   const curated = document.querySelector('#curated');
-  ['PC-001', 'PC-003', 'PC-016'].forEach(id => { const p = data.find(item => item.id === id); if (!p) return; const card = document.createElement('button'), image = document.createElement('img'), info = document.createElement('div'), title = document.createElement('h3'), ref = document.createElement('p'), action = document.createElement('span'); card.type = 'button'; card.className = 'product-card'; card.setAttribute('aria-label', 'Seleção Portela: ' + p.nome + ', ' + p.id); image.src = p.fotos[0]; image.alt = p.nome; image.loading = 'lazy'; image.width = image.height = 720; info.className = 'product-info'; title.textContent = p.nome; ref.textContent = p.id + ' · Sob encomenda'; action.textContent = 'Ver detalhes'; info.append(ref,title,action); card.append(image,info); card.addEventListener('click',()=>showProduct(p)); curated.append(card); });
+  ['PC-001', 'PC-003', 'PC-214'].forEach(id => { const p = data.find(item => item.id === id); if (!p) return; const card = document.createElement('button'), image = document.createElement('img'), info = document.createElement('div'), title = document.createElement('h3'), ref = document.createElement('p'), action = document.createElement('span'); card.type = 'button'; card.className = 'product-card'; card.setAttribute('aria-label', 'Seleção Portela: ' + p.nome + ', ' + p.id); image.src = p.fotos[0]; image.alt = p.nome; image.loading = 'lazy'; image.width = image.height = 720; info.className = 'product-info'; title.textContent = p.nome; ref.textContent = p.id + ' · Sob encomenda'; action.textContent = 'Ver detalhes'; info.append(ref,title,action); card.append(image,info); card.addEventListener('click',()=>showProduct(p)); curated.append(card); });
   const requested = new URLSearchParams(location.search).get('produto');
   if (requested) { const p = data.find(item => item.id === requested); if (p) showProduct(p); else status.textContent = 'Referência não encontrada. Explore os modelos disponíveis ou consulte a loja.'; }
 }).catch(() => { status.textContent = 'Não foi possível carregar o catálogo. Atualize a página ou consulte a loja pelo WhatsApp.'; more.hidden = true; });
