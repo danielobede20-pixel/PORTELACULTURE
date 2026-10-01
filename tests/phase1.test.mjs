@@ -23,3 +23,14 @@ test('storage outage returns recoverable error without pretending it saved',asyn
 test('large requests are bounded',async()=>{assert.equal((await worker.fetch(request({...event,extra:'x'.repeat(7000)}),env())).status,413);});
 test('session limit bounds repeated submissions without blocking idempotent retry',async()=>{const e=env();for(let i=0;i<30;i++)assert.equal((await worker.fetch(request({...event,id:crypto.randomUUID()}),e)).status,201);assert.equal((await worker.fetch(request({...event,id:crypto.randomUUID()}),e)).status,429);});
 test('prototype property names cannot crash quiz validation',async()=>{for(const key of ['constructor','toString','__proto__']){const quiz=JSON.parse('{"'+key+'":"Nike"}');assert.equal((await worker.fetch(request({...event,quiz}),env())).status,400);}});
+test('quiz records all newly cataloged brands in the real table',async()=>{
+ for(const brand of ['Adidas','ASICS','On','Vans','Puma']){
+  const e=env();const r=await worker.fetch(request({...event,type:'quiz_complete',productId:null,quiz:{brand}}),e);
+  assert.equal(r.status,201,brand);assert.equal(JSON.parse(e.sql.prepare('SELECT quiz FROM interesses').get().quiz).brand,brand);
+ }
+});
+test('a new ASICS product event uses canonical server metadata',async()=>{
+ const e=env();const r=await worker.fetch(request({...event,productId:'PC-362',quiz:{brand:'ASICS'}}),e);
+ assert.equal(r.status,201);const row=e.sql.prepare('SELECT * FROM interesses').get();
+ assert.equal(row.produto_id,'PC-362');assert.equal(row.marca,'ASICS');assert.match(row.produto_nome,/GEL-1130/);assert.equal(row.clique_whatsapp,1);
+});

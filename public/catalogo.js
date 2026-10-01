@@ -20,15 +20,20 @@ document.addEventListener('portela-preferences', updateOrder);
 dialog.addEventListener('close', () => { selectedProduct=null; Portela.setProduct(null); });
 document.querySelector('#pedido-form').addEventListener('submit', e => e.preventDefault());
 const normalize = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-function matches(p) {
+function productLine(p) {
+  if (p.linha) return p.linha;
   const name = normalize(p.nome);
-  const inLine = !model.value || (model.value.startsWith('nb:') ? p.marca === 'New Balance' && p.linha === model.value.slice(3) : p.marca === 'Nike' && name.includes('dunk') && (model.value === 'sb' ? name.includes('sb') : model.value === 'high' ? name.includes('high') : name.includes('low') && !name.includes('sb')));
-  return (!brand.value || p.marca === brand.value) && inLine && normalize(p.nome + ' ' + p.id + ' ' + p.marca).includes(normalize(search.value.trim()));
+  if (name.includes('dunk')) return name.includes('sb') ? 'Dunk SB' : name.includes('high') ? 'Dunk High' : 'Dunk Low';
+  if (name.includes('force 58')) return 'SB Force 58';
+  return 'Outras linhas';
+}
+function matches(p) {
+  const inLine = !model.value || model.value === JSON.stringify([p.marca, productLine(p)]);
+  return (!brand.value || p.marca === brand.value) && inLine && normalize(p.nome + ' ' + p.id + ' ' + p.marca + ' ' + productLine(p)).includes(normalize(search.value.trim()));
 }
 function updateModels() {
   model.replaceChildren(new Option('Todas as linhas', ''));
-  if (!brand.value || brand.value === 'Nike') [['Dunk SB','sb'],['Dunk Low','low'],['Dunk High','high']].forEach(([label,value]) => model.add(new Option(label,value)));
-  if (!brand.value || brand.value === 'New Balance') [...new Set(data.filter(p => p.marca === 'New Balance').map(p => p.linha))].sort((a,b) => a.localeCompare(b, 'pt-BR', {numeric:true})).forEach(line => model.add(new Option('New Balance ' + line, 'nb:' + line)));
+  [...new Set(data.filter(p => !brand.value || p.marca === brand.value).map(p => JSON.stringify([p.marca,productLine(p)])))].sort((a,b) => a.localeCompare(b,'pt-BR',{numeric:true})).forEach(value => {const [maker,line] = JSON.parse(value); model.add(new Option(brand.value ? line : maker + ' · ' + line,value));});
 }
 function showProduct(p) {
   selectedProduct = p;
@@ -59,7 +64,12 @@ more.addEventListener('click', () => { shown += 12; render(); });
 dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
 fetch('catalogo.json').then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
-  data = items; updateModels(); render();
+  data = items;
+  const brands = [...new Set(data.map(p => p.marca))];
+  brand.replaceChildren(new Option('Todas as marcas',''));
+  const strip = document.querySelector('.brands'); strip.replaceChildren();
+  brands.forEach(maker => {brand.add(new Option(maker,maker)); const button = document.createElement('button'); button.type = 'button'; button.className = 'brand-item'; button.textContent = maker; button.setAttribute('aria-label','Ver modelos ' + maker); button.addEventListener('click',() => {brand.value = maker; search.value = ''; shown = 12; updateModels(); render(); document.querySelector('#catalogo').scrollIntoView(); brand.focus({preventScroll:true});}); strip.append(button);});
+  updateModels(); render();
   const curated = document.querySelector('#curated');
   ['PC-001', 'PC-003', 'PC-214'].forEach(id => { const p = data.find(item => item.id === id); if (!p) return; const card = document.createElement('button'), image = document.createElement('img'), info = document.createElement('div'), title = document.createElement('h3'), ref = document.createElement('p'), action = document.createElement('span'); card.type = 'button'; card.className = 'product-card'; card.setAttribute('aria-label', 'Seleção Portela: ' + p.nome + ', ' + p.id); image.src = p.fotos[0]; image.alt = p.nome; image.loading = 'lazy'; image.width = image.height = 720; info.className = 'product-info'; title.textContent = p.nome; ref.textContent = p.id + ' · Sob encomenda'; action.textContent = 'Ver detalhes'; info.append(ref,title,action); card.append(image,info); card.addEventListener('click',()=>showProduct(p)); curated.append(card); });
   const requested = new URLSearchParams(location.search).get('produto');

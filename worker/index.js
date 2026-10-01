@@ -1,5 +1,5 @@
 import catalog from './catalog.json' with { type: 'json' };
-const choices = {category:['tenis','roupas','acessorios'],use:['treino','casual','lifestyle'],brand:['Nike','New Balance','Outra','Sem preferencia'],availability:['pronta_entrega','encomenda','sem_preferencia'],intent:['agora','opcoes']};
+const choices = {category:['tenis','roupas','acessorios'],use:['treino','casual','lifestyle'],brand:['Nike','New Balance','Adidas','ASICS','On','Vans','Puma','Outra','Sem preferencia'],availability:['pronta_entrega','encomenda','sem_preferencia'],intent:['agora','opcoes']};
 const sources = ['instagram','direto','quiz','whatsapp','outros'];
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 const page = /^\/(?:\?produto=PC-\d{3})?(?:#[a-z-]+)?$/;
