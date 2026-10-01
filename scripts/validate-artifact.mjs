@@ -23,3 +23,10 @@ assert.equal(
 );
 
 console.log("Artifact is valid ESM and exports default.fetch");
+const origin='https://portela.test';
+assert.equal((await workerModule.default.fetch(new Request(origin+'/api/atendimento'),{})).status,401);
+const authenticated=new Request(origin+'/api/atendimento/base',{headers:{'oai-authenticated-user-id':'test-user','oai-authenticated-user-email':'owner@example.test'}});
+const knowledgeResponse=await workerModule.default.fetch(authenticated,{PORTELA_ADMIN_EMAIL:'owner@example.test'});
+assert.equal(knowledgeResponse.status,200);
+const knowledge=await knowledgeResponse.json();assert.equal(knowledge.produtos.length,390);assert.equal(knowledge.ia_ativa,false);
+console.log('Built attendance protection and knowledge routes verified');
