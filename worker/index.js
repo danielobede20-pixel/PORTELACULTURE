@@ -1,6 +1,8 @@
 import catalog from './catalog.json' with { type: 'json' };
 import {attendance} from './atendimento.js';
 import {assistant} from './ia.js';
+import {catalogMedia} from './catalog-media.js';
+import assetRegistry from './catalog-assets.json' with {type:'json'};
 const choices = {category:['tenis','roupas','acessorios','calcados'],use:['treino','casual','lifestyle','streetwear'],brand:[...new Set(catalog.map(p=>p.marca)),'Outra','Sem preferencia','Descobrir'],availability:['pronta_entrega','encomenda','sem_preferencia'],intent:['agora','opcoes','disponibilidade','estilo']};
 const sources = ['instagram','direto','quiz','whatsapp','outros'];
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
@@ -29,6 +31,7 @@ export default {
  async fetch(request,env,ctx) {
   const url = new URL(request.url);
   let path;try{path=decodeURIComponent(url.pathname);}catch{return json({error:'Endereço inválido.'},400);}
+  if(url.pathname.startsWith('/api/catalogo/imagens/')||Object.hasOwn(assetRegistry,url.pathname.slice(1)))return catalogMedia(request,env,assetRegistry);
   if(path==='/api/ia')return assistant(request,env,catalog);
   if (['/atendimento','/atendimento/','/atendimento.html'].includes(path)||path==='/api/atendimento'||path.startsWith('/api/atendimento/'))return attendance(request,env,catalog);
   if (url.pathname !== '/api/interesses') {
