@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
-import worker from '../worker/index.js';
+import worker, {notifyAutomation} from '../worker/index.js';
 const event = { id: 'a1234567-1234-4123-8123-123456789abc', session: 'b1234567-1234-4123-8123-123456789abc', type: 'whatsapp_click', source: 'instagram', entry: '/?produto=PC-214#catalogo', page: '/#catalogo', placement: 'produto', productId: 'PC-214', quiz: {category:'tenis',use:'casual',brand:'New Balance',availability:'encomenda',intent:'agora'} };
 function env() {
   const sql = new DatabaseSync(':memory:');
@@ -39,4 +39,12 @@ test('a new ASICS product event uses canonical server metadata',async()=>{
  const e=env();const r=await worker.fetch(request({...event,productId:'PC-362',quiz:{brand:'ASICS'}}),e);
  assert.equal(r.status,201);const row=e.sql.prepare('SELECT * FROM interesses').get();
  assert.equal(row.produto_id,'PC-362');assert.equal(row.marca,'ASICS');assert.match(row.produto_nome,/GEL-1130/);assert.equal(row.clique_whatsapp,1);
+});
+
+test('automation webhook receives only explicit lead events with canonical product data',async()=>{
+ let sent;const e={...event};const ok=await notifyAutomation({PORTELA_AUTOMATION_WEBHOOK_URL:'https://automation.test/hook',PORTELA_AUTOMATION_WEBHOOK_TOKEN:'secret',__fetch:async(url,init)=>{sent={url,init};return new Response(null,{status:204});}},e,{id:'PC-214',nome:'530',marca:'New Balance',categoria:'tenis'});
+ assert.equal(ok,true);assert.equal(sent.url,'https://automation.test/hook');assert.equal(sent.init.headers.authorization,'Bearer secret');const body=JSON.parse(sent.init.body);assert.equal(body.eventId,event.id);assert.equal(body.product.id,'PC-214');assert.equal(body.product.marca,'New Balance');assert.equal(body.whatsappClick,true);assert.equal(Object.hasOwn(body,'phone'),false);
+});
+test('automation ignores passive product views and missing configuration',async()=>{
+ assert.equal(await notifyAutomation({},event,null),false);assert.equal(await notifyAutomation({PORTELA_AUTOMATION_WEBHOOK_URL:'https://automation.test/hook',__fetch:async()=>{throw new Error('should not run');}},{...event,type:'product_view'},null),false);
 });

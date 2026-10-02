@@ -7,6 +7,14 @@ const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{1
 const page = /^\/(?:\?produto=PC-\d{3,6})?(?:#[a-z-]+)?$/;
 const placements = ['inicio','estilo','categorias','selecao','catalogo','como-pedir','cta','produto','quiz','flutuante'];
 function json(value,status=200) {return Response.json(value,{status,headers:{'cache-control':'no-store','x-content-type-options':'nosniff'}});}
+export async function notifyAutomation(env,e,p) {
+ if(!env?.PORTELA_AUTOMATION_WEBHOOK_URL || !['quiz_complete','whatsapp_click'].includes(e.type)) return false;
+ const payload={eventId:e.id,eventType:e.type,session:e.session,source:e.source,campaign:e.campaign??null,entry:e.entry,page:e.page,placement:e.placement,product:p?{id:p.id,nome:p.nome,marca:p.marca,categoria:p.categoria||'tenis'}:null,quiz:e.quiz,intent:e.quiz?.intent??'consulta',whatsappClick:e.type==='whatsapp_click',sentAt:new Date().toISOString()};
+ const headers={'content-type':'application/json','x-portela-event-id':e.id};
+ if(env.PORTELA_AUTOMATION_WEBHOOK_TOKEN) headers.authorization=`Bearer ${env.PORTELA_AUTOMATION_WEBHOOK_TOKEN}`;
+ try {const sender=env.__fetch||fetch;const response=await sender(env.PORTELA_AUTOMATION_WEBHOOK_URL,{method:'POST',headers,body:JSON.stringify(payload)});if(!response.ok)console.error('automation_webhook_failed',response.status);return response.ok;}
+ catch(error){console.error('automation_webhook_error',error.message);return false;}
+}
 export async function saveInterest(db, e, p) {
  if (!db) throw new Error('DB unavailable');
  const existing = await db.prepare('SELECT id FROM interesses WHERE id = ?').bind(e.id).first();
@@ -18,7 +26,7 @@ export async function saveInterest(db, e, p) {
  return true;
 }
 export default {
- async fetch(request,env) {
+ async fetch(request,env,ctx) {
   const url = new URL(request.url);
   let path;try{path=decodeURIComponent(url.pathname);}catch{return json({error:'Endereço inválido.'},400);}
   if(path==='/api/ia')return assistant(request,env,catalog);
@@ -37,7 +45,7 @@ export default {
   if((e.campaign!=null&&(typeof e.campaign!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(e.campaign)))||(e.type==='product_view'&&!e.productId))return json({error:'Dados de origem inválidos.'},400);
   const product = e.productId ? catalog.find(p=>p.id===e.productId) : null;
   if (e.productId&&!product) return json({error:'Produto inválido.'},400);
-  try { const saved = await saveInterest(env.DB,e,product); return saved ? json({saved:true,id:e.id},201) : json({error:'Aguarde um pouco antes de tentar novamente.'},429); }
+  try { const saved = await saveInterest(env.DB,e,product); if(!saved)return json({error:'Aguarde um pouco antes de tentar novamente.'},429); const automation=notifyAutomation(env,e,product); if(ctx?.waitUntil)ctx.waitUntil(automation);else await automation; return json({saved:true,id:e.id},201); }
   catch (error) { console.error('interest_save_failed',error.message); return json({error:'Não conseguimos registrar suas preferências. Tente novamente; o atendimento pelo WhatsApp continua disponível.'},503); }
  }
 };
