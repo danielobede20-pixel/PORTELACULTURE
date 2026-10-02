@@ -1,0 +1,1 @@
+ALTER TABLE `interesses` ADD `campanha` text;

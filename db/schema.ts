@@ -2,7 +2,7 @@ import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 export const iaUso = sqliteTable('ia_uso',{id:text('id').primaryKey(),quantidade:integer('quantidade').notNull().default(0)});
 export const interesses = sqliteTable('interesses', {
  id: text('id').primaryKey(), sessao: text('sessao').notNull(), criadoEm: text('criado_em').notNull(),
- tipo: text('tipo').notNull(), origem: text('origem').notNull(), entrada: text('pagina_entrada').notNull(), pagina: text('pagina_atual').notNull(), posicionamento: text('posicionamento').notNull(),
+ tipo: text('tipo').notNull(), origem: text('origem').notNull(), campanha: text('campanha'), entrada: text('pagina_entrada').notNull(), pagina: text('pagina_atual').notNull(), posicionamento: text('posicionamento').notNull(),
  produtoId: text('produto_id'), produtoNome: text('produto_nome'), marca: text('marca'), categoria: text('categoria'), quiz: text('quiz').notNull(),
  cliqueWhatsapp: integer('clique_whatsapp').notNull().default(0), intencao: text('intencao').notNull(), status: text('status').notNull().default('novo'),
  observacoes: text('observacoes').notNull().default(''), historico: text('historico').notNull().default('[]'), revisao: integer('revisao').notNull().default(0), atualizadoEm: text('atualizado_em')

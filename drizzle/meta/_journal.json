@@ -22,6 +22,13 @@
       "when": 1790895938059,
       "tag": "0002_old_micromax",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1790913337776,
+      "tag": "0003_needy_gladiator",
+      "breakpoints": true
     }
   ]
 }

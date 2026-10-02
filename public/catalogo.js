@@ -60,6 +60,7 @@ function render() {
 }
 search.addEventListener('input', () => { shown = 12; render(); });
 category.addEventListener('change', () => { shown = 12; updateModels(); render(); });
+document.querySelectorAll('[data-catalog-category]').forEach(link=>link.addEventListener('click',()=>{category.value=link.dataset.catalogCategory;brand.value='';search.value='';shown=12;updateModels();render();category.focus({preventScroll:true});}));
 brand.addEventListener('change', () => { shown = 12; updateModels(); render(); });
 model.addEventListener('change', () => { shown = 12; render(); });
 more.addEventListener('click', () => { shown += 12; render(); });
@@ -72,11 +73,11 @@ fetch('catalogo.json').then(r => { if (!r.ok) throw new Error('catalog'); return
   const quizBrand=document.querySelector('#quiz-form select[name="brand"]');
   quizBrand.replaceChildren(new Option('Prefiro não informar',''));
   [...new Set(data.map(p=>p.marca))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(value=>quizBrand.add(new Option(value,value)));
-  quizBrand.add(new Option('Outra marca','Outra'));quizBrand.add(new Option('Sem preferência','Sem preferencia'));
+  quizBrand.add(new Option('Quero descobrir opções','Descobrir'));quizBrand.add(new Option('Outra marca','Outra'));quizBrand.add(new Option('Sem preferência','Sem preferencia'));
   const brands = [...new Set(data.map(p => p.marca))];
   brand.replaceChildren(new Option('Todas as marcas',''));
   const strip = document.querySelector('.brands'); strip.replaceChildren();
-  brands.forEach(maker => {brand.add(new Option(maker,maker)); const button = document.createElement('button'); button.type = 'button'; button.className = 'brand-item'; button.textContent = maker; button.setAttribute('aria-label','Ver modelos ' + maker); button.addEventListener('click',() => {brand.value = maker; search.value = ''; shown = 12; updateModels(); render(); document.querySelector('#catalogo').scrollIntoView(); brand.focus({preventScroll:true});}); strip.append(button);});
+  brands.forEach(maker => {brand.add(new Option(maker,maker)); const button = document.createElement('button'); button.type = 'button'; button.className = 'brand-item'; button.textContent = maker; button.setAttribute('aria-label','Ver modelos ' + maker); button.addEventListener('click',() => {brand.value = maker; category.value = ''; search.value = ''; shown = 12; updateModels(); render(); document.querySelector('#catalogo').scrollIntoView(); brand.focus({preventScroll:true});}); strip.append(button);});
   updateModels(); render();
   const curated = document.querySelector('#curated');
   ['PC-001', 'PC-003', 'PC-214'].forEach(id => { const p = data.find(item => item.id === id); if (!p) return; const card = document.createElement('button'), image = document.createElement('img'), info = document.createElement('div'), title = document.createElement('h3'), ref = document.createElement('p'), action = document.createElement('span'); card.type = 'button'; card.className = 'product-card'; card.setAttribute('aria-label', 'Seleção Portela: ' + p.nome + ', ' + p.id); image.src = p.fotos[0]; image.alt = p.nome; image.loading = 'lazy'; image.width = image.height = 720; info.className = 'product-info'; title.textContent = p.nome; ref.textContent = p.id + ' · Sob encomenda'; action.textContent = 'Ver detalhes'; info.append(ref,title,action); card.append(image,info); card.addEventListener('click',()=>showProduct(p)); curated.append(card); });

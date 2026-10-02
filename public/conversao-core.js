@@ -5,7 +5,7 @@
   if(product) lines.push(`Referência: ${product.id} · Marca: ${product.marca} · Categoria: ${labels[product.categoria||'tenis']||product.categoria}`);
   else if(category) lines.push('Procuro: '+labels[category]);
   if(use&&!quiz.use) lines.push('Uso: '+labels[use]);
-  if(size?.trim()) lines.push((product?.categoria==='roupas'?'Tamanho desejado: ':'Numeração desejada: ')+size.trim());
+  if(size?.trim()) lines.push('Tamanho desejado: '+size.trim());
   if(city?.trim()) lines.push('Cidade / UF: '+city.trim());
   const fields={category:'Categoria',use:'Uso',brand:'Marca preferida',availability:'Preferência de entrega',intent:'Momento da compra'};
   if(Object.keys(quiz).length) {lines.push('Minhas preferências:');for(const [k,label] of Object.entries(fields)) if(quiz[k]) lines.push(label+': '+(labels[quiz[k]]||quiz[k]));}
@@ -15,5 +15,7 @@
  }
  function source(href,referrer) {const s=new URL(href).searchParams.get('utm_source')?.toLowerCase();if(['instagram','ig'].includes(s))return 'instagram';if(['whatsapp','wa'].includes(s))return 'whatsapp';if(s)return 'outros';if(!referrer)return 'direto';let host;try {host=new URL(referrer).hostname;}catch{return 'outros';}return /(^|\.)instagram\.com$/.test(host)?'instagram':/(^|\.)whatsapp\.com$/.test(host)?'whatsapp':'outros';}
  function page(href) {const u=new URL(href),p=u.searchParams.get('produto');return '/'+(/^PC-\d{3,6}$/.test(p)?'?produto='+p:'')+(/^#[a-z-]+$/.test(u.hash)?u.hash:'');}
- root.PortelaCore={message,source,page,labels};
+ function campaign(href) {const value=new URL(href).searchParams.get('utm_campaign');return typeof value==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(value)?value:null;}
+ Object.assign(labels,{streetwear:'Streetwear',disponibilidade:'Consultar disponibilidade',estilo:'Encontrar meu estilo',Descobrir:'Quero descobrir opções',calcados:'calçados'});
+ root.PortelaCore={message,source,page,campaign,labels};
 })(globalThis);

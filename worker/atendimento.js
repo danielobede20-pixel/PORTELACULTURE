@@ -17,11 +17,11 @@ export async function attendance(request,env,catalog){
   if(path==='/api/atendimento'&&request.method==='GET'){
    const offset=Number(url.searchParams.get('offset')||0);if(!Number.isInteger(offset)||offset<0||offset>10000)return json({error:'Página inválida.'},400);
    const clauses=[],values=[];
-   for(const [key,column] of [['status','status'],['marca','marca'],['origem','origem'],['tipo','tipo']]){const value=url.searchParams.get(key);if(value){if(value.length>80||(key==='status'&&!statuses.includes(value)))return json({error:'Filtro inválido.'},400);clauses.push(column+' = ?');values.push(value);}}
+   for(const [key,column] of [['status','status'],['marca','marca'],['origem','origem'],['tipo','tipo'],['categoria','categoria'],['campanha','campanha']]){const value=url.searchParams.get(key);if(value){if(value.length>80||(key==='status'&&!statuses.includes(value)))return json({error:'Filtro inválido.'},400);clauses.push(column+' = ?');values.push(value);}}
    const search=url.searchParams.get('busca');if(search){if(search.length>120)return json({error:'Busca muito longa.'},400);clauses.push('(produto_id LIKE ? OR produto_nome LIKE ?)');values.push('%'+search+'%','%'+search+'%');}
    const where=clauses.length?' WHERE '+clauses.join(' AND '):'';
    const results=await env.DB.prepare('SELECT * FROM interesses'+where+' ORDER BY criado_em DESC,id DESC LIMIT 26 OFFSET ?').bind(...values,offset).all();
-   return json({items:results.results.slice(0,25).map(row),next_offset:results.results.length>25&&offset<10000?offset+25:null});
+   return json({brands:[...new Set(catalog.map(p=>p.marca))].sort(),items:results.results.slice(0,25).map(row),next_offset:results.results.length>25&&offset<10000?offset+25:null});
   }
   if(path.startsWith('/api/atendimento/')&&request.method==='PATCH'){
    if(request.headers.get('origin')!==url.origin||request.headers.get('sec-fetch-site')==='cross-site')return json({error:'Origem não permitida.'},403);
