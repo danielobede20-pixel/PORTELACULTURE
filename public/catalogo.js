@@ -8,6 +8,7 @@ nav.addEventListener('keydown', e => { if (e.key !== 'Tab' || !nav.classList.con
 menu.addEventListener('keydown', e => { if (e.key === 'Tab' && nav.classList.contains('open')) { e.preventDefault(); (e.shiftKey ? nav.querySelector('a:last-child') : nav.querySelector('a')).focus(); } });
 const products = document.querySelector('#products'), status = document.querySelector('#resultado'), search = document.querySelector('#busca'), brand = document.querySelector('#marca'), model = document.querySelector('#modelo'), more = document.querySelector('#mais'), dialog = document.querySelector('#produto');
 let data = [], shown = 12, selectedProduct = null;
+const category = document.querySelector('#categoria');
 const sizeInput = document.querySelector('#pedido-tamanho'), cityInput = document.querySelector('#pedido-cidade');
 function productURL(p) { const url = new URL(location.pathname, location.origin); url.searchParams.set('produto', p.id); url.hash = 'catalogo'; return url.href; }
 function updateOrder() {
@@ -29,11 +30,11 @@ function productLine(p) {
 }
 function matches(p) {
   const inLine = !model.value || model.value === JSON.stringify([p.marca, productLine(p)]);
-  return (!brand.value || p.marca === brand.value) && inLine && normalize(p.nome + ' ' + p.id + ' ' + p.marca + ' ' + productLine(p)).includes(normalize(search.value.trim()));
+  return (!category.value || (p.categoria||'tenis') === category.value) && (!brand.value || p.marca === brand.value) && inLine && normalize(p.nome + ' ' + p.id + ' ' + p.marca + ' ' + productLine(p)).includes(normalize(search.value.trim()));
 }
 function updateModels() {
   model.replaceChildren(new Option('Todas as linhas', ''));
-  [...new Set(data.filter(p => !brand.value || p.marca === brand.value).map(p => JSON.stringify([p.marca,productLine(p)])))].sort((a,b) => a.localeCompare(b,'pt-BR',{numeric:true})).forEach(value => {const [maker,line] = JSON.parse(value); model.add(new Option(brand.value ? line : maker + ' · ' + line,value));});
+  [...new Set(data.filter(p => (!brand.value || p.marca === brand.value) && (!category.value || (p.categoria||'tenis')===category.value)).map(p => JSON.stringify([p.marca,productLine(p)])))].sort((a,b) => a.localeCompare(b,'pt-BR',{numeric:true})).forEach(value => {const [maker,line] = JSON.parse(value); model.add(new Option(brand.value ? line : maker + ' · ' + line,value));});
 }
 function showProduct(p) {
   selectedProduct = p;
@@ -58,6 +59,7 @@ function render() {
   more.hidden = filtered.length <= shown;
 }
 search.addEventListener('input', () => { shown = 12; render(); });
+category.addEventListener('change', () => { shown = 12; updateModels(); render(); });
 brand.addEventListener('change', () => { shown = 12; updateModels(); render(); });
 model.addEventListener('change', () => { shown = 12; render(); });
 more.addEventListener('click', () => { shown += 12; render(); });
@@ -65,6 +67,12 @@ dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
 fetch('catalogo.json').then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
   data = items;
+  category.replaceChildren(new Option('Todas as categorias',''));
+  [...new Set(data.map(p=>p.categoria||'tenis'))].forEach(value=>category.add(new Option(PortelaCore.labels[value]||value,value)));
+  const quizBrand=document.querySelector('#quiz-form select[name="brand"]');
+  quizBrand.replaceChildren(new Option('Prefiro não informar',''));
+  [...new Set(data.map(p=>p.marca))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(value=>quizBrand.add(new Option(value,value)));
+  quizBrand.add(new Option('Outra marca','Outra'));quizBrand.add(new Option('Sem preferência','Sem preferencia'));
   const brands = [...new Set(data.map(p => p.marca))];
   brand.replaceChildren(new Option('Todas as marcas',''));
   const strip = document.querySelector('.brands'); strip.replaceChildren();

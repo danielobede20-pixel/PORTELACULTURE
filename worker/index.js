@@ -1,10 +1,10 @@
 import catalog from './catalog.json' with { type: 'json' };
 import {attendance} from './atendimento.js';
 import {assistant} from './ia.js';
-const choices = {category:['tenis','roupas','acessorios'],use:['treino','casual','lifestyle'],brand:['Nike','New Balance','Adidas','ASICS','On','Vans','Puma','Outra','Sem preferencia'],availability:['pronta_entrega','encomenda','sem_preferencia'],intent:['agora','opcoes']};
+const choices = {category:['tenis','roupas','acessorios'],use:['treino','casual','lifestyle'],brand:[...new Set(catalog.map(p=>p.marca)),'Outra','Sem preferencia'],availability:['pronta_entrega','encomenda','sem_preferencia'],intent:['agora','opcoes']};
 const sources = ['instagram','direto','quiz','whatsapp','outros'];
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
-const page = /^\/(?:\?produto=PC-\d{3})?(?:#[a-z-]+)?$/;
+const page = /^\/(?:\?produto=PC-\d{3,6})?(?:#[a-z-]+)?$/;
 const placements = ['inicio','estilo','categorias','selecao','catalogo','como-pedir','cta','produto','quiz','flutuante'];
 function json(value,status=200) {return Response.json(value,{status,headers:{'cache-control':'no-store','x-content-type-options':'nosniff'}});}
 export async function saveInterest(db, e, p) {
@@ -13,7 +13,7 @@ export async function saveInterest(db, e, p) {
  if (existing) return true;
  const recent = await db.prepare('SELECT COUNT(*) AS n FROM interesses WHERE sessao = ? AND criado_em >= ?').bind(e.session,new Date(Date.now()-3600000).toISOString()).first();
  if (recent.n >= 30) return false;
- await db.prepare(`INSERT OR IGNORE INTO interesses (id,sessao,criado_em,tipo,origem,pagina_entrada,pagina_atual,posicionamento,produto_id,produto_nome,marca,categoria,quiz,clique_whatsapp,intencao,status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(e.id,e.session,new Date().toISOString(),e.type,e.source,e.entry,e.page,e.placement,p?.id??null,p?.nome??null,p?.marca??e.quiz.brand??null,p?'tenis':e.category??e.quiz.category??null,JSON.stringify(e.quiz),e.type==='whatsapp_click'?1:0,e.quiz.intent??'consulta','novo').run();
+ await db.prepare(`INSERT OR IGNORE INTO interesses (id,sessao,criado_em,tipo,origem,pagina_entrada,pagina_atual,posicionamento,produto_id,produto_nome,marca,categoria,quiz,clique_whatsapp,intencao,status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(e.id,e.session,new Date().toISOString(),e.type,e.source,e.entry,e.page,e.placement,p?.id??null,p?.nome??null,p?.marca??e.quiz.brand??null,p?(p.categoria||'tenis'):e.category??e.quiz.category??null,JSON.stringify(e.quiz),e.type==='whatsapp_click'?1:0,e.quiz.intent??'consulta','novo').run();
  return true;
 }
 export default {

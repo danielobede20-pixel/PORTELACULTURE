@@ -1,7 +1,7 @@
 (function() {
  const core=PortelaCore, phone='5561995158424', pending=new Map();
  const context={session:crypto.randomUUID(),entry:core.page(location.href),source:core.source(location.href,document.referrer)};
- try {const prior=JSON.parse(sessionStorage.getItem('portela-visita'));if(prior&&/^[a-f0-9-]{36}$/.test(prior.session)&&['direto','instagram','whatsapp','outros'].includes(prior.source)&&/^\/(?:\?produto=PC-\d{3})?(?:#[a-z-]+)?$/.test(prior.entry)) Object.assign(context,prior);else sessionStorage.setItem('portela-visita',JSON.stringify(context));}catch{}
+ try {const prior=JSON.parse(sessionStorage.getItem('portela-visita'));if(prior&&/^[a-f0-9-]{36}$/.test(prior.session)&&['direto','instagram','whatsapp','outros'].includes(prior.source)&&/^\/(?:\?produto=PC-\d{3,6})?(?:#[a-z-]+)?$/.test(prior.entry)) Object.assign(context,prior);else sessionStorage.setItem('portela-visita',JSON.stringify(context));}catch{}
  let quiz={},product=null;
  const quizDialog=document.querySelector('#quiz'),form=document.querySelector('#quiz-form'),steps=[...form.querySelectorAll('[data-step]')],next=document.querySelector('#quiz-next'),back=document.querySelector('#quiz-back'),summary=document.querySelector('#quiz-summary');
  let step=0,trigger=null;
@@ -15,7 +15,7 @@
   try {const r=await fetch('/api/interesses',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(e),keepalive:true});const value=await r.json();if(!r.ok||value.saved!==true)throw new Error(value.error||'');pending.delete(e.id);status(pending.size?'Algumas preferências ainda não foram registradas.':'Preferências registradas. Você pode continuar pelo WhatsApp.');}
   catch {status('Não conseguimos registrar suas preferências. Tente novamente. O WhatsApp continua disponível.');}
  }
- function register(type,placement,opts={}) {const e={id:crypto.randomUUID(),...context,type,page:opts.product?'/?produto='+opts.product.id+'#catalogo':core.page(location.href),placement,productId:opts.product?.id||null,category:opts.product?'tenis':opts.category||null,quiz:{...quiz}};pending.set(e.id,e);send(e);}
+ function register(type,placement,opts={}) {const e={id:crypto.randomUUID(),...context,type,page:opts.product?'/?produto='+opts.product.id+'#catalogo':core.page(location.href),placement,productId:opts.product?.id||null,category:opts.product?(opts.product.categoria||'tenis'):opts.category||null,quiz:{...quiz}};pending.set(e.id,e);send(e);}
  document.querySelectorAll('[data-retry]').forEach(b=>b.addEventListener('click',()=>{status('Tentando registrar…');[...pending.values()].forEach(send);}));
  document.querySelectorAll('a[href*="wa.me"],#order').forEach(a=>{a.dataset.contact='true';a.rel='noopener';a.target='_blank';if(!a.dataset.placement) a.dataset.placement=a.id==='order'?'produto':a.classList.contains('whatsapp')?'flutuante':a.closest('section')?.id||'cta';let last=0;a.addEventListener('click',()=>{if(Date.now()-last<1200)return;last=Date.now();register('whatsapp_click',a.dataset.placement,{product:a.id==='order'||a.classList.contains('whatsapp')?product:null,category:a.dataset.category});});});
  function draw() {steps.forEach((el,i)=>el.hidden=i!==step);summary.hidden=step!==3;document.querySelector('#quiz-progress').textContent=step<3?'Etapa '+(step+1)+' de 3':'Suas preferências';back.hidden=step===0;next.hidden=step===3;next.textContent=step===2?'Concluir preferências':'Continuar';if(step<3)steps[step].querySelector('input,select')?.focus();}
