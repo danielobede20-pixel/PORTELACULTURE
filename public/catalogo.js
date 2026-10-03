@@ -28,9 +28,11 @@ function catalogURL(brand='', line='', type='') {
   url.hash='catalogo';return url.href;
 }
 function choose(brand='', line='', type='', scroll=true) {
+  const restoreLineFocus=document.activeElement.closest('#catalog-lines');
   selection={brand,line,category:brand==='Alo' ? 'roupas' : type};category.value=selection.category;shown=12;
   history.replaceState(null,'',catalogURL(selection.brand,selection.line,selection.category));
   updateNavigation();render();closeMenu();
+  if(restoreLineFocus)document.querySelector('#catalog-lines [aria-pressed="true"]')?.focus({preventScroll:true});
   if(scroll){document.querySelector('#catalogo').scrollIntoView();document.querySelector('#catalog-heading').focus({preventScroll:true});}
 }
 function makeLink(text, maker, line='', type='') {
@@ -39,8 +41,8 @@ function makeLink(text, maker, line='', type='') {
 }
 function updateNavigation() {
   const strip=document.querySelector('.brands'), lines=document.querySelector('#catalog-lines');strip.replaceChildren();lines.replaceChildren();
-  const groups=PortelaCatalog.groups(data,selection.category);
-  groups.forEach(group=>{const button=document.createElement('button'),title=document.createElement('strong'),count=document.createElement('span');button.type='button';button.className='brand-item';button.setAttribute('aria-pressed',String(selection.brand===group.brand));title.textContent=group.label;count.textContent=group.count+' produtos';button.append(title,count);button.addEventListener('click',()=>choose(group.brand,'',selection.category));strip.append(button);});
+  const groups=PortelaCatalog.groups(data,selection.brand==='Alo' ? '' : selection.category);
+  groups.forEach(group=>{const button=document.createElement('button'),title=document.createElement('strong'),count=document.createElement('span');button.type='button';button.className='brand-item';button.setAttribute('aria-pressed',String(selection.brand===group.brand));title.textContent=group.label;count.textContent=group.count+' produtos';button.append(title,count);button.addEventListener('click',()=>choose(group.brand,'',selection.brand==='Alo' ? '' : selection.category));strip.append(button);});
   const selected=groups.find(group=>group.brand===selection.brand);
   document.querySelector('#catalog-heading').textContent=selection.brand ? PortelaCatalog.label(selection.brand) : 'Escolha sua marca.';
   document.querySelector('#catalog-back').hidden=!selection.brand;
@@ -85,7 +87,7 @@ document.querySelectorAll('[data-catalog-category]').forEach(link=>link.addEvent
 more.addEventListener('click', () => { shown += 12; render(); });
 dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
-fetch('catalogo.json').then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
+fetch('catalogo.json?v=16',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
   data = PortelaCatalog.visibleProducts(items);
   category.replaceChildren(new Option('Todas as categorias',''));
   [...new Set(data.map(p=>p.categoria||'tenis'))].forEach(value=>category.add(new Option(PortelaCore.labels[value]||value,value)));
