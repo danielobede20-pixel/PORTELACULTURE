@@ -1,0 +1,79 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync, existsSync} from 'node:fs';
+import vm from 'node:vm';
+const core=vm.runInNewContext(readFileSync('public/catalogo-core.js','utf8')+';PortelaCatalog');
+const context={URL};vm.runInNewContext(readFileSync('public/conversao-core.js','utf8'),context);
+const conversion=context.PortelaCore;
+const catalog=JSON.parse(readFileSync('public/catalogo.json','utf8'));
+const perfumes=catalog.filter(p=>p.categoria==='perfumaria');
+
+test('perfumaria has 40 items, each with a local image and complete labels',()=>{
+ assert.equal(perfumes.length,40);
+ for(const p of perfumes){
+  assert.ok(p.marca&&p.genero&&p.volume&&['Perfume','Kit'].includes(p.subtipo),p.id);
+  assert.ok(p.fotos.every(src=>src.startsWith('media/perfumaria/')&&existsSync('public/'+src)),p.id);
+ }
+});
+test('gender, brand and type filters combine inside perfumaria only',()=>{
+ const pick=selection=>perfumes.filter(p=>core.matches(p,{category:'perfumaria',...selection}));
+ assert.equal(pick({}).length,40);
+ assert.ok(pick({gender:'Feminino'}).every(p=>p.genero==='Feminino')&&pick({gender:'Feminino'}).length>0);
+ assert.ok(pick({kind:'Kit'}).every(p=>p.subtipo==='Kit')&&pick({kind:'Kit'}).length>0);
+ assert.equal(pick({kind:'Kit'}).length+pick({kind:'Perfume'}).length,40);
+ const brand=perfumes[0].marca,combined=pick({brand,gender:perfumes[0].genero,kind:perfumes[0].subtipo});
+ assert.ok(combined.includes(perfumes[0])&&combined.every(p=>p.marca===brand));
+ assert.equal(catalog.filter(p=>p.categoria!=='perfumaria'&&core.matches(p,{category:'perfumaria'})).length,0);
+});
+test('filter options are derived only from perfumaria and card specs show brand, concentration and volume',()=>{
+ const options=core.perfumeOptions(catalog);
+ assert.deepEqual(Array.from(options.kind),['Kit','Perfume']);
+ assert.ok(options.gender.includes('Masculino')&&options.gender.includes('Feminino'));
+ assert.ok(options.brand.every(b=>perfumes.some(p=>p.marca===b)));
+ assert.equal(core.perfumeSpecs({marca:'LATTAFA',concentracao:'EDP',volume:100}),['LATTAFA','EDP','100 ml'].join(String.fromCharCode(32,183,32)));
+ assert.equal(core.perfumeSpecs({marca:'ARMAF',volume:30}),['ARMAF','30 ml'].join(String.fromCharCode(32,183,32)));
+});
+test('perfume WhatsApp message keeps product context and optional city, without size or prices',()=>{
+ const p=perfumes[0],url='https://portela.test/?produto='+p.id+'#catalogo';
+ const city='Brasília / DF',m=conversion.message({product:p,url,size:'42',city});
+ for(const s of [p.nome,p.id,p.marca,p.volume+' ml',city,url])assert.ok(m.includes(s),s);
+ assert.ok(!/c[oó]digo/i.test(m),'supplier code must not be sent to customers');
+ assert.ok(!m.includes('42')&&!/R\$|[¥￥]|\b(?:JPY|CNY|RMB)\b|undefined/i.test(m));
+ assert.ok(!conversion.message({product:p,url}).includes('Cidade'));
+});
+test('public catalog exposes no private supplier metadata or yuan/yen prices',()=>{
+ const privateKey=/yupoo|1688|taobao|weidian|supplier|fornecedor|origem|custo|cost|album|raw|interno|internal|privad/i;
+ const privateValue=/yupoo|1688\.com|taobao|weidian|[¥￥]|\b(?:JPY|CNY|RMB)\b|yuan|iene/i;
+ for(const p of catalog){
+  for(const [key,value] of Object.entries(p)){
+   assert.ok(!privateKey.test(key),p.id+' campo privado: '+key);
+   if(typeof value==='string')assert.ok(!privateValue.test(value),p.id+' valor privado em '+key);
+  }
+  for(const src of [...(p.fotos||[]),...(p.imagens||[])])assert.ok(!privateValue.test(src),p.id+' imagem com origem privada');
+ }
+});
+test('perfumaria route and filter controls exist in the page and script',()=>{
+ const html=readFileSync('public/index.html','utf8'),script=readFileSync('public/catalogo.js','utf8');
+ for(const id of ['perfumaria-filters','filtro-genero','filtro-marca','filtro-tipo'])assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(html.includes('data-catalog-category="perfumaria"'),'Perfumaria must be visible in the home categories');
+ assert.ok(script.includes("params.get('categoria')")&&script.includes("'Consultar'"));
+});
+test('perfumaria public data carries no supplier code: no codigo field and photos named by Portela reference',()=>{
+ const worker=JSON.parse(readFileSync('worker/catalog.json','utf8')).filter(p=>p.categoria==='perfumaria');
+ assert.equal(worker.length,40);
+ for(const p of [...perfumes,...worker])assert.ok(!('codigo' in p),p.id+' expõe codigo');
+ for(const p of perfumes){
+  const ref=p.id.toLowerCase();
+  assert.match(ref,/^pc-9\d{5}$/);
+  for(const src of p.fotos){
+   assert.ok(src.startsWith('media/perfumaria/'+ref+'-'),p.id+' foto fora do padrão: '+src);
+   assert.ok(existsSync('public/'+src),p.id+' foto ausente: '+src);
+  }
+ }
+});
+test('kit names use Portuguese wording without inventing quantities',()=>{
+ for(const p of perfumes){
+  assert.ok(!/PIEZAS/i.test(p.nome),p.id+' ainda tem PIEZAS');
+  assert.ok(!/\bpeças\b/.test(p.nome)||/\d peças/.test(p.nome),p.id+' peças sem quantidade');
+ }
+});

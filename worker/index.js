@@ -3,7 +3,7 @@ import {attendance} from './atendimento.js';
 import {assistant} from './ia.js';
 import {catalogMedia} from './catalog-media.js';
 import assetRegistry from './catalog-assets.json' with {type:'json'};
-const choices = {category:['tenis','roupas','acessorios','calcados'],use:['treino','casual','lifestyle','streetwear'],brand:[...new Set(catalog.map(p=>p.marca)),'Outra','Sem preferencia','Descobrir'],availability:['pronta_entrega','encomenda','sem_preferencia'],intent:['agora','opcoes','disponibilidade','estilo']};
+const choices = {category:['tenis','roupas','acessorios','calcados','perfumaria'],use:['treino','casual','lifestyle','streetwear'],brand:[...new Set(catalog.map(p=>p.marca)),'Outra','Sem preferencia','Descobrir'],availability:['pronta_entrega','encomenda','sem_preferencia'],intent:['agora','opcoes','disponibilidade','estilo']};
 const sources = ['instagram','direto','quiz','whatsapp','outros'];
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 const page = /^\/(?:\?produto=PC-\d{3,6})?(?:#[a-z-]+)?$/;

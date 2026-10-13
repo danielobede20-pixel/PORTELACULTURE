@@ -15,7 +15,7 @@ test('catalog client and worker share exactly the same references and metadata',
 });
 
 test('62 published Nike additions retain their 62 local images',()=>{
-  const additions=client.filter(p=>Number(p.id.replace('PC-',''))>=1450);
+  const additions=client.filter(p=>Number(p.id.replace('PC-',''))>=1450 && Number(p.id.replace('PC-',''))<=1512);
   assert.equal(additions.length,62);
   for(const p of additions){
     assert.equal(p.marca,'Nike',p.id);

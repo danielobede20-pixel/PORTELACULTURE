@@ -29,6 +29,14 @@ test('brand menu contains only the models present in the selected category',()=>
  assert.equal(groups.find(g=>g.brand==='Alo').lines.map(l=>l.name).join(','),'Camisetas');
  assert.equal(groups.some(g=>g.brand==='On'),false);
 });
+test('changing category resets a brand that has no products in the destination',()=>{
+ const catalog=[...core.visibleProducts(items),{id:'h',marca:'LATTAFA',nome:'Khamrah',categoria:'perfumaria',linha:'Perfume'}];
+ assert.equal(core.brandForCategory(catalog,'Nike','perfumaria'),'');
+ assert.equal(core.brandForCategory(catalog,'LATTAFA','tenis'),'');
+ assert.equal(core.brandForCategory(catalog,'Nike','roupas'),'Nike');
+ assert.equal(core.brandForCategory(catalog,'Nike',''),'Nike');
+ assert.equal(core.brandForCategory(catalog,'','perfumaria'),'');
+});
 test('On Running label and legacy Dunk model names remain recognizable',()=>{
  assert.equal(core.label('On'),'On Running');
  assert.equal(core.line({nome:'Nike SB Dunk Low',categoria:'tenis'}),'Dunk SB');

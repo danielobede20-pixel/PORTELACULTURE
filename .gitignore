@@ -9,3 +9,7 @@ dist/
 
 # Local Git worktrees used by Codex/Superpowers
 .worktrees/
+
+# Dados brutos internos e script temporario (nao publicar)
+data/
+.tmp-inspect.cjs

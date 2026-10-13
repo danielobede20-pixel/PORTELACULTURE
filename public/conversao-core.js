@@ -1,6 +1,13 @@
 (function(root) {
- const labels={tenis:'tênis',roupas:'roupas',acessorios:'acessórios',treino:'Treino',casual:'Casual',lifestyle:'Lifestyle',pronta_entrega:'Pronta entrega (a confirmar)',encomenda:'Encomenda',sem_preferencia:'Sem preferência',agora:'Quero comprar agora',opcoes:'Quero ver opções','Sem preferencia':'Sem preferência',Outra:'Outra marca'};
+ const labels={perfumaria:'Perfumaria',tenis:'tênis',roupas:'roupas',acessorios:'acessórios',treino:'Treino',casual:'Casual',lifestyle:'Lifestyle',pronta_entrega:'Pronta entrega (a confirmar)',encomenda:'Encomenda',sem_preferencia:'Sem preferência',agora:'Quero comprar agora',opcoes:'Quero ver opções','Sem preferencia':'Sem preferência',Outra:'Outra marca'};
  function message({product,category,quiz={},url,size,city,use}={}) {
+  if(product?.categoria==='perfumaria') {
+   const lines=[`Olá! Tenho interesse no ${product.nome}.`,`Referência Portela: ${product.id} · Marca: ${product.marca}${product.volume ? ' · Volume: '+product.volume+' ml' : ''}`];
+   if(city?.trim()) lines.push('Cidade / UF: '+city.trim());
+   lines.push('Podem confirmar preço, disponibilidade, frete, pagamento e prazo?');
+   if(url) lines.push(url);
+   return lines.join('\n');
+  }
   const lines=[product ? `Olá! Vim pelo site da Portela Culture e tenho interesse no produto ${product.nome}. Gostaria de consultar a disponibilidade.` : 'Olá! Vim pelo site da Portela Culture e gostaria de atendimento.'];
   if(product) lines.push(`Referência: ${product.id} · Marca: ${product.marca} · Categoria: ${labels[product.categoria||'tenis']||product.categoria}`);
   else if(category) lines.push('Procuro: '+labels[category]);

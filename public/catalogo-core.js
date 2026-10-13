@@ -10,7 +10,17 @@ const PortelaCatalog = (() => {
     return p.categoria === 'roupas' ? 'Roupas' : p.categoria === 'acessorios' ? 'Acessórios' : 'Outros modelos';
   }
   function matches(p, selection = {}) {
-    return (!selection.brand || p.marca === selection.brand) && (!selection.category || (p.categoria || 'tenis') === selection.category) && (!selection.line || line(p) === selection.line);
+    return (!selection.brand || p.marca === selection.brand) && (!selection.category || (p.categoria || 'tenis') === selection.category) && (!selection.line || line(p) === selection.line) && (!selection.gender || p.genero === selection.gender) && (!selection.kind || p.subtipo === selection.kind);
+  }
+  function brandForCategory(items, brand, category) {
+    return brand && items.some(p => matches(p, {brand, category})) ? brand : '';
+  }
+  function perfumeOptions(items) {
+    const perfumes = items.filter(p => p.categoria === 'perfumaria'), unique = key => [...new Set(perfumes.map(p => p[key]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    return {gender:unique('genero'), brand:unique('marca'), kind:unique('subtipo')};
+  }
+  function perfumeSpecs(p) {
+    return [p.marca, p.concentracao, p.volume ? p.volume + ' ml' : ''].filter(Boolean).join(' · ');
   }
   function groups(items, category = '') {
     const result = new Map();
@@ -20,5 +30,5 @@ const PortelaCatalog = (() => {
     });
     return [...result.values()].sort((a,b)=>a.label.localeCompare(b.label,'pt-BR')).map(g=>({...g, lines:[...g.lines].sort(([a],[b])=>a.localeCompare(b,'pt-BR',{numeric:true})).map(([name,count])=>({name,count}))}));
   }
-  return {visibleProducts, label, line, matches, groups};
+  return {visibleProducts, label, line, matches, brandForCategory, groups, perfumeOptions, perfumeSpecs};
 })();
