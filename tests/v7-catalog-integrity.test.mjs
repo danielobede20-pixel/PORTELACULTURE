@@ -26,7 +26,7 @@ test('same-name products of one brand and category are told apart by a public PC
  const groups=new Map();
  for(const p of catalog){const key=[p.marca,category(p),p.nome].join('|');groups.set(key,[...(groups.get(key)||[]),p]);}
  const duplicated=[...groups.values()].filter(g=>g.length>1);
- assert.ok(duplicated.length>0);
+ // Após a renomeação V7 (6ea59ae) pode não haver grupo repetido; se houver, cada item precisa de ID distinto.
  for(const group of duplicated)assert.equal(new Set(group.map(p=>p.id)).size,group.length);
  // The card shows the reference above the original name, and the detail shows it too.
  assert.match(ui,/ref\.textContent\s*=\s*p\.id/);
