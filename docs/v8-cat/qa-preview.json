@@ -1,0 +1,162 @@
+[
+ {
+  "check": "1440px destaques 12 cards",
+  "ok": true,
+  "info": "12"
+ },
+ {
+  "check": "1440px sem overflow horizontal",
+  "ok": true,
+  "info": "0"
+ },
+ {
+  "check": "1440px PC-021 na familia Air Force 1 Low",
+  "ok": true,
+  "info": "PC-021  Nike Air Force 1 Low — Branco  Disponível sob encomenda · Consulte preço e tamanho  Ver detalhes  PC-351  Nike A"
+ },
+ {
+  "check": "1440px PC-1950 em Adidas > Camisetas",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440px PC-1679 em Adidas > Roupas > Moletons",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440px modal PC-1553 + WhatsApp com referencia",
+  "ok": true,
+  "info": "Nike — Camiseta Preta Logo Bolhas"
+ },
+ {
+  "check": "1440px sem pageerror",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390px destaques 12 cards",
+  "ok": true,
+  "info": "12"
+ },
+ {
+  "check": "390px sem overflow horizontal",
+  "ok": true,
+  "info": "0"
+ },
+ {
+  "check": "390px PC-021 na familia Air Force 1 Low",
+  "ok": true,
+  "info": "PC-021  Nike Air Force 1 Low — Branco  Disponível sob encomenda · Consulte preço e tamanho  Ver detalhes  PC-351  Nike A"
+ },
+ {
+  "check": "390px PC-1950 em Adidas > Camisetas",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390px PC-1679 em Adidas > Roupas > Moletons",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390px modal PC-1553 + WhatsApp com referencia",
+  "ok": true,
+  "info": "Nike — Camiseta Preta Logo Bolhas"
+ },
+ {
+  "check": "390px sem pageerror",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360px destaques 12 cards",
+  "ok": true,
+  "info": "12"
+ },
+ {
+  "check": "360px sem overflow horizontal",
+  "ok": true,
+  "info": "0"
+ },
+ {
+  "check": "360px PC-021 na familia Air Force 1 Low",
+  "ok": true,
+  "info": "PC-021  Nike Air Force 1 Low — Branco  Disponível sob encomenda · Consulte preço e tamanho  Ver detalhes  PC-351  Nike A"
+ },
+ {
+  "check": "360px PC-1950 em Adidas > Camisetas",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360px PC-1679 em Adidas > Roupas > Moletons",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360px modal PC-1553 + WhatsApp com referencia",
+  "ok": true,
+  "info": "Nike — Camiseta Preta Logo Bolhas"
+ },
+ {
+  "check": "360px botao WhatsApp compacto e tocavel (>=44px)",
+  "ok": true,
+  "info": "[99.203125, 44]"
+ },
+ {
+  "check": "360px espaco inferior reservado",
+  "ok": true,
+  "info": "76px"
+ },
+ {
+  "check": "360px sem pageerror",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320px destaques 12 cards",
+  "ok": true,
+  "info": "12"
+ },
+ {
+  "check": "320px sem overflow horizontal",
+  "ok": true,
+  "info": "0"
+ },
+ {
+  "check": "320px PC-021 na familia Air Force 1 Low",
+  "ok": true,
+  "info": "PC-021  Nike Air Force 1 Low — Branco  Disponível sob encomenda · Consulte preço e tamanho  Ver detalhes  PC-351  Nike A"
+ },
+ {
+  "check": "320px PC-1950 em Adidas > Camisetas",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320px PC-1679 em Adidas > Roupas > Moletons",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320px modal PC-1553 + WhatsApp com referencia",
+  "ok": true,
+  "info": "Nike — Camiseta Preta Logo Bolhas"
+ },
+ {
+  "check": "320px botao WhatsApp compacto e tocavel (>=44px)",
+  "ok": true,
+  "info": "[99.203125, 44]"
+ },
+ {
+  "check": "320px espaco inferior reservado",
+  "ok": true,
+  "info": "76px"
+ },
+ {
+  "check": "320px sem pageerror",
+  "ok": true,
+  "info": ""
+ }
+]

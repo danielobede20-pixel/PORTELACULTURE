@@ -6,6 +6,9 @@ const catalog=JSON.parse(readFileSync('public/catalogo.json','utf8'));
 const assets=JSON.parse(readFileSync('worker/catalog-assets.json','utf8'));
 const ui=readFileSync('public/catalogo.js','utf8');
 const category=p=>p.categoria||'tenis';
+// V8-CAT: exceções de marca/categoria/linha somente pelo manifesto, conferidas campo a campo.
+const {mudancas}=JSON.parse(readFileSync('docs/v8-cat/manifesto.json','utf8'));
+const semV8Cat=items=>{const byId=new Map(items.map(p=>[p.id,structuredClone(p)]));for(const m of mudancas){const p=byId.get(m.id);assert.equal(p[m.campo]??null,m.depois,m.id+' '+m.campo);if(m.antes==null)delete p[m.campo];else p[m.campo]=m.antes;}return items.map(p=>byId.get(p.id));};
 
 test('catalog keeps 2818 unique ids with the same brand, category and photos',()=>{
  assert.equal(catalog.length,2818);
@@ -14,7 +17,7 @@ test('catalog keeps 2818 unique ids with the same brand, category and photos',()
   assert.match(p.id,/^PC-\d+$/);
   assert.ok(p.fotos?.length>0,p.id);
  }
- const hash=createHash('sha256').update(JSON.stringify(catalog.map(p=>[p.id,p.marca,category(p),p.fotos]))).digest('hex');
+ const hash=createHash('sha256').update(JSON.stringify(semV8Cat(catalog).map(p=>[p.id,p.marca,category(p),p.fotos]))).digest('hex');
  assert.equal(hash,'5070ce1c56024aa3300577ca57e6afd0bd7261bf8f9f64bb3dc358193114e3a3');
 });
 
@@ -38,7 +41,7 @@ test('same-name products of one brand and category are told apart by a public PC
 test('V7 curated selection uses existing ids, matching brand/category, with no invented gender',()=>{
  const selection={
   'PC-351':['Nike','tenis'],'PC-355':['Adidas','tenis'],'PC-214':['New Balance','tenis'],'PC-362':['ASICS','tenis'],'PC-368':['On','tenis'],'PC-374':['Vans','tenis'],
-  'PC-2747':['Nike','acessorios'],'PC-1679':['Adidas','acessorios'],'PC-2857':['On','acessorios'],'PC-462':['Gucci','acessorios'],
+  'PC-2747':['Nike','acessorios'],'PC-1679':['Adidas','roupas'],'PC-2857':['On','acessorios'],'PC-462':['Gucci','acessorios'],
   'PC-474':['Gucci','roupas'],'PC-2809':['Nike','roupas']
  };
  for(const [id,[marca,cat]] of Object.entries(selection)){
