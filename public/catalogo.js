@@ -1,3 +1,5 @@
+const FALLBACK_IMAGE = 'media/imagem-indisponivel.svg';
+document.addEventListener('error', e => { const img = e.target; if (!(img instanceof HTMLImageElement) || !img.closest('.products, .thumbs, #produto') || img.getAttribute('src') === FALLBACK_IMAGE) return; img.src = FALLBACK_IMAGE; if (img.alt) img.alt += ' (imagem indisponível)'; }, true);
 const menu = document.querySelector('.menu');
 const nav = document.querySelector('#nav');
 function closeMenu() { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.setAttribute('aria-label', 'Abrir menu'); menu.textContent = '⋮'; }
@@ -108,7 +110,7 @@ document.querySelectorAll('[data-catalog-category]').forEach(link=>link.addEvent
 more.addEventListener('click', () => { shown += 12; render(); });
 dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
-fetch('catalogo.json?v=20',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
+fetch('catalogo.json?v=21',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
   data = PortelaCatalog.visibleProducts(items);
   category.replaceChildren(new Option('Todas as categorias',''));
   [...new Set(data.map(p=>p.categoria||'tenis'))].forEach(value=>category.add(new Option(PortelaCore.labels[value]||value,value)));
