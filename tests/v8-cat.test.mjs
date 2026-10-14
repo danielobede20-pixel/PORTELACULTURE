@@ -62,3 +62,22 @@ test('small screens keep the floating WhatsApp compact and leave room after the 
  assert.match(rule[0],/padding:11px 14px/);
  assert.match(rule[0],/min-height:44px/);
 });
+
+test('vitrine shows a real Adidas cap instead of the PC-1679 hoodie',()=>{
+ const ui=readFileSync('public/catalogo.js','utf8');
+ const block=ui.slice(ui.indexOf('const featured'),ui.indexOf('if (requested)'));
+ assert.doesNotMatch(block,/PC-1679/);
+ const cap=byId.get('PC-1706');
+ assert.equal(cap.marca,'Adidas');assert.equal(cap.categoria,'acessorios');assert.match(cap.linha,/Bon/);
+ assert.match(block,/'PC-1706'/);
+});
+
+test('floating WhatsApp hides only while scrolling down on small screens and never by transform',()=>{
+ const ui=readFileSync('public/catalogo.js','utf8'),html=readFileSync('public/index.html','utf8');
+ assert.match(ui,/matchMedia\('\(max-width: 820px\)'\)/);
+ assert.match(ui,/classList\.add\('recolhido'\)/);
+ assert.match(ui,/nearEnd/);
+ assert.match(ui,/addEventListener\('scroll', \(\) => \{[^}]*\}, \{ passive: true \}\)/);
+ assert.match(html,/\.whatsapp\.recolhido\{opacity:0;visibility:hidden;pointer-events:none\}/);
+ assert.doesNotMatch(html,/\.recolhido\{[^}]*transform/);
+});

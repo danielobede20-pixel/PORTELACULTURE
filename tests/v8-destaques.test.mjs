@@ -5,7 +5,7 @@ const catalog=JSON.parse(readFileSync('public/catalogo.json','utf8'));
 const assets=JSON.parse(readFileSync('worker/catalog-assets.json','utf8'));
 const ui=readFileSync('public/catalogo.js','utf8');
 const html=readFileSync('public/index.html','utf8');
-const IDS=['PC-351','PC-355','PC-214','PC-362','PC-368','PC-374','PC-2747','PC-1679','PC-2857','PC-462','PC-474','PC-2809'];
+const IDS=['PC-351','PC-355','PC-214','PC-362','PC-368','PC-374','PC-2747','PC-1706','PC-2857','PC-462','PC-474','PC-2809'];
 
 test('Destaques Portela renders the 12 approved ids from the existing catalog objects',()=>{
  const line=ui.split('\n').find(l=>l.includes('#destaques-lista')||l.includes('featured.append'))||'';

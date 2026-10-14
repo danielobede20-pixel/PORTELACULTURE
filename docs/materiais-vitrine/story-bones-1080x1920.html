@@ -23,7 +23,7 @@ footer{margin-top:34px;display:flex;justify-content:space-between;align-items:en
 </main>
 <script>
 const base=new URLSearchParams(location.search).get('base')||'';
-const items=[{"id":"PC-2747","nome":"Nike — Boné","marca":"Nike","src":"media/catalogo/colecao-20261010/PC-2747/001.webp"},{"id":"PC-1679","nome":"Adidas — Boné","marca":"Adidas","src":"media/catalogo/colecao-20261010/PC-1679/001.webp"},{"id":"PC-2857","nome":"On — Boné","marca":"On","src":"media/catalogo/colecao-20261010/PC-2857/001.webp"},{"id":"PC-462","nome":"Gucci — Boné","marca":"Gucci","src":"media/catalogo/gucci/248736687/capa.webp"}];
+const items=[{"id":"PC-2747","nome":"Nike — Boné","marca":"Nike","src":"media/catalogo/colecao-20261010/PC-2747/001.webp"},{"id":"PC-1706","nome":"Adidas — Boné Trefoil","marca":"Adidas","src":"media/catalogo/colecao-20261010/PC-1706/002.webp"},{"id":"PC-2857","nome":"On — Boné","marca":"On","src":"media/catalogo/colecao-20261010/PC-2857/001.webp"},{"id":"PC-462","nome":"Gucci — Boné","marca":"Gucci","src":"media/catalogo/gucci/248736687/capa.webp"}];
 const grid=document.getElementById('grid');
 for(const it of items){const f=document.createElement('figure'),ph=document.createElement('div'),c=document.createElement('figcaption');ph.className='ph';
  if(base){const i=new Image();i.alt=it.nome+' — '+it.id;i.src=base+it.src;i.onerror=()=>{i.remove();ph.textContent=it.id};ph.append(i);}else ph.textContent=it.id;

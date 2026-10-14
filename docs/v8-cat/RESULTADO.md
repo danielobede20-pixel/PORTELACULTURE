@@ -21,8 +21,13 @@ Branch `feature/v8-cat-20261014` = 8446bf3 (vitrine no ar, v23) + V7 (6ea59ae, n
 ## Não feito / duvidoso (não alterado)
 - 17 linhas com nome "brando" (ex.: blusas em Camisetas, conjuntos Tech Fleece em Jaquetas/Calças, viseira em Bonés). Aceitáveis; não alterei sem critério do coordenador.
 - Os "19 possíveis duplicados" e as listas antigas de 67/74/99 não existiam em arquivo; refiz a auditoria por critérios objetivos (marca no nome × campo marca; tipo de peça × categoria/linha) e conferi cada caso por foto.
-- Botão flutuante: em 320/360px ele ainda passa por cima de parte de um card durante a rolagem (é fixo). Ficou menor e o fim da página tem espaço reservado. Eliminar 100% exige decisão de design (ex.: esconder ao rolar para baixo).
+- Botão flutuante sobre cards ao rolar: resolvido na 2ª entrega (abaixo).
 
-## Pontos para o ChatGPT/Daniel
-- Vitrine "Destaques" usa PC-1679 como boné; ele é moletom. Continua exibido corretamente como Adidas, mas o texto "Tênis, bonés e camisas" e a arte `docs/materiais-vitrine/story-bones-1080x1920` (não publicada) usam esse item como boné. Sugestão: trocar por um boné Adidas real.
-- Publicação: aplicar a branch sobre a fonte atual do Sites (ChatGPT, após 18:40). Reversão = versão 23.
+## 2ª entrega (decisões do Daniel, 14/10)
+- Vitrine Destaques: PC-1679 (moletom) trocado por **PC-1706 — Adidas Boné Trefoil** (trevo e escrita "adidas" nas fotos). Arte `docs/materiais-vitrine/story-bones-1080x1920` atualizada e PNG regerado com as fotos do site (4/4 carregadas). Não postar sem aprovação.
+- Botão WhatsApp em telas até 820px: some ao rolar para baixo (após 160px) e volta ao rolar para cima, no topo, no fim da página ou ao receber foco. Usa opacidade/visibilidade, sem transform, então o modo de movimento reduzido continua funcionando. Desktop não muda.
+- `catalogo.js?v=23` para os navegadores pegarem o script novo.
+- Verificação: 100/100 testes, build OK, validate-artifact OK, diff --check limpo. QA preview 53/53 (1440/390/360/320): vitrine com PC-1706, sem overflow, botão some/volta/aparece no fim, menu, quiz abre/conclui com Perfumaria/fecha, produto corrigido com tamanho e cidade no WhatsApp, imagem quebrada usa fallback, rota inexistente tratada, sem erro crítico. Detalhes em `qa-preview-2.json`.
+
+## Para o ChatGPT
+- Revisar manifesto e este relatório; aplicar a branch sobre a fonte atual do Sites; deploy; QA de produção. Reversão = versão 23.

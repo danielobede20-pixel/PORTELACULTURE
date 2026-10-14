@@ -41,7 +41,7 @@ test('same-name products of one brand and category are told apart by a public PC
 test('V7 curated selection uses existing ids, matching brand/category, with no invented gender',()=>{
  const selection={
   'PC-351':['Nike','tenis'],'PC-355':['Adidas','tenis'],'PC-214':['New Balance','tenis'],'PC-362':['ASICS','tenis'],'PC-368':['On','tenis'],'PC-374':['Vans','tenis'],
-  'PC-2747':['Nike','acessorios'],'PC-1679':['Adidas','roupas'],'PC-2857':['On','acessorios'],'PC-462':['Gucci','acessorios'],
+  'PC-2747':['Nike','acessorios'],'PC-1706':['Adidas','acessorios'],'PC-2857':['On','acessorios'],'PC-462':['Gucci','acessorios'],
   'PC-474':['Gucci','roupas'],'PC-2809':['Nike','roupas']
  };
  for(const [id,[marca,cat]] of Object.entries(selection)){
