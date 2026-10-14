@@ -27,5 +27,5 @@ const items=[{"id":"PC-2747","nome":"Nike — Boné","marca":"Nike","src":"media
 const grid=document.getElementById('grid');
 for(const it of items){const f=document.createElement('figure'),ph=document.createElement('div'),c=document.createElement('figcaption');ph.className='ph';
  if(base){const i=new Image();i.alt=it.nome+' — '+it.id;i.src=base+it.src;i.onerror=()=>{i.remove();ph.textContent=it.id};ph.append(i);}else ph.textContent=it.id;
- c.innerHTML='<b></b><span></span>';c.firstChild.textContent=it.nome;c.lastChild.textContent=it.marca+' · '+it.id;f.append(ph,c);grid.append(f);}
+ c.innerHTML='<b></b><span></span>';c.firstChild.textContent=it.nome;c.lastChild.textContent=it.marca;f.append(ph,c);grid.append(f);}
 </script></body></html>

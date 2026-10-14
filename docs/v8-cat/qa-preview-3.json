@@ -1,0 +1,307 @@
+[
+ {
+  "check": "1440 destaques 12 cards",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440 vitrine com PC-1706 e sem PC-1679",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440 nenhum PC- visivel na pagina inicial",
+  "ok": true,
+  "info": "[]"
+ },
+ {
+  "check": "1440 sem overflow",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440 botao visivel no topo",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440 botao ao rolar para baixo",
+  "ok": true,
+  "info": "visivel"
+ },
+ {
+  "check": "1440 botao volta ao rolar para cima",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440 botao visivel no fim da pagina",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440 quiz abre com Perfumaria",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440 quiz conclui com Perfumaria no resumo e WhatsApp",
+  "ok": true,
+  "info": "Seu estilo, seu ponto de partida.\nCategoria: Perfumaria\nUso: Casual\nRECEBER ORIE"
+ },
+ {
+  "check": "1440 quiz fecha",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "1440 PC-1950 Adidas + WhatsApp com ref, tamanho e cidade",
+  "ok": true,
+  "info": "Adidas — Camiseta Preta 3 Listras"
+ },
+ {
+  "check": "1440 detalhe do produto sem PC- visivel",
+  "ok": true,
+  "info": "×\nCURADORIA PORTELA · SOB ENCOMENDA\nAdidas — Camiseta Preta 3 Listras\n\nAdidas\n\nConsulte preço, numeração e prazo com a l"
+ },
+ {
+  "check": "1440 sem erro critico",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 destaques 12 cards",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 vitrine com PC-1706 e sem PC-1679",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 nenhum PC- visivel na pagina inicial",
+  "ok": true,
+  "info": "[]"
+ },
+ {
+  "check": "390 sem overflow",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 botao visivel no topo",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 botao ao rolar para baixo",
+  "ok": true,
+  "info": "oculto"
+ },
+ {
+  "check": "390 botao volta ao rolar para cima",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 botao visivel no fim da pagina",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 menu abre",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 quiz abre com Perfumaria",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 quiz conclui com Perfumaria no resumo e WhatsApp",
+  "ok": true,
+  "info": "Seu estilo, seu ponto de partida.\nCategoria: Perfumaria\nUso: Casual\nRECEBER ORIE"
+ },
+ {
+  "check": "390 quiz fecha",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "390 PC-1950 Adidas + WhatsApp com ref, tamanho e cidade",
+  "ok": true,
+  "info": "Adidas — Camiseta Preta 3 Listras"
+ },
+ {
+  "check": "390 detalhe do produto sem PC- visivel",
+  "ok": true,
+  "info": "×\nCURADORIA PORTELA · SOB ENCOMENDA\nAdidas — Camiseta Preta 3 Listras\n\nAdidas\n\nConsulte preço, numeração e prazo com a l"
+ },
+ {
+  "check": "390 sem erro critico",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 destaques 12 cards",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 vitrine com PC-1706 e sem PC-1679",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 nenhum PC- visivel na pagina inicial",
+  "ok": true,
+  "info": "[]"
+ },
+ {
+  "check": "360 sem overflow",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 botao visivel no topo",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 botao ao rolar para baixo",
+  "ok": true,
+  "info": "oculto"
+ },
+ {
+  "check": "360 botao volta ao rolar para cima",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 botao visivel no fim da pagina",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 menu abre",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 quiz abre com Perfumaria",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 quiz conclui com Perfumaria no resumo e WhatsApp",
+  "ok": true,
+  "info": "Seu estilo, seu ponto de partida.\nCategoria: Perfumaria\nUso: Casual\nRECEBER ORIE"
+ },
+ {
+  "check": "360 quiz fecha",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "360 PC-1950 Adidas + WhatsApp com ref, tamanho e cidade",
+  "ok": true,
+  "info": "Adidas — Camiseta Preta 3 Listras"
+ },
+ {
+  "check": "360 detalhe do produto sem PC- visivel",
+  "ok": true,
+  "info": "×\nCURADORIA PORTELA · SOB ENCOMENDA\nAdidas — Camiseta Preta 3 Listras\n\nAdidas\n\nConsulte preço, numeração e prazo com a l"
+ },
+ {
+  "check": "360 sem erro critico",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 destaques 12 cards",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 vitrine com PC-1706 e sem PC-1679",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 nenhum PC- visivel na pagina inicial",
+  "ok": true,
+  "info": "[]"
+ },
+ {
+  "check": "320 sem overflow",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 botao visivel no topo",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 botao ao rolar para baixo",
+  "ok": true,
+  "info": "oculto"
+ },
+ {
+  "check": "320 botao volta ao rolar para cima",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 botao visivel no fim da pagina",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 menu abre",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 quiz abre com Perfumaria",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 quiz conclui com Perfumaria no resumo e WhatsApp",
+  "ok": true,
+  "info": "Seu estilo, seu ponto de partida.\nCategoria: Perfumaria\nUso: Casual\nRECEBER ORIE"
+ },
+ {
+  "check": "320 quiz fecha",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "320 PC-1950 Adidas + WhatsApp com ref, tamanho e cidade",
+  "ok": true,
+  "info": "Adidas — Camiseta Preta 3 Listras"
+ },
+ {
+  "check": "320 detalhe do produto sem PC- visivel",
+  "ok": true,
+  "info": "×\nCURADORIA PORTELA · SOB ENCOMENDA\nAdidas — Camiseta Preta 3 Listras\n\nAdidas\n\nConsulte preço, numeração e prazo com a l"
+ },
+ {
+  "check": "320 sem erro critico",
+  "ok": true,
+  "info": ""
+ },
+ {
+  "check": "imagem quebrada usa fallback",
+  "ok": true,
+  "info": "['media/imagem-indisponivel.svg', 'media/003-01.webp']"
+ },
+ {
+  "check": "rota inexistente nao quebra (status tratado)",
+  "ok": true,
+  "info": "404"
+ }
+]

@@ -31,3 +31,10 @@ Branch `feature/v8-cat-20261014` = 8446bf3 (vitrine no ar, v23) + V7 (6ea59ae, n
 
 ## Para o ChatGPT
 - Revisar manifesto e este relatório; aplicar a branch sobre a fonte atual do Sites; deploy; QA de produção. Reversão = versão 23.
+
+## 3ª entrega — sem código "PC-" para o cliente (pedido do Daniel, 14/10)
+- Removido " · Ref. PC-…" de 144 nomes (catálogo e worker). Nomes podem repetir quando é o mesmo modelo/cor; cada anúncio continua com ID e capa próprios.
+- Cards do catálogo, Seleção, Destaques e detalhe do produto mostram a marca no lugar do código; textos alternativos e rótulos de acessibilidade também ficaram sem código.
+- O código continua só onde a loja precisa: mensagem do WhatsApp ("Referência Portela: PC-…") e link do produto (?produto=PC-…).
+- Artes da vitrine (bonés e camisas) sem código nas legendas; PNGs regerados.
+- Verificação: 100/100 testes, build OK, validate-artifact OK. QA preview 61/61 em 1440/390/360/320, incluindo "nenhum PC- visível" na página e no detalhe (a mesma checagem encontra 27 códigos no site no ar hoje, então ela detecta de fato).

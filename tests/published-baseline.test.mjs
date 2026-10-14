@@ -13,10 +13,9 @@ test('preserves all 2778 published products (ids, photos, brand, category) exact
  const hash=createHash('sha256').update(JSON.stringify(semV8Cat(catalog).slice(0,2778).map(({nome,...r})=>r))).digest('hex');
  assert.equal(hash,'655a5510692dba76437429dd7065e19487946d24fe42985553667a9a119e258e');
 });
-test('every product has a unique, non-empty display name',()=>{
- const nomes=catalog.map(p=>String(p.nome||'').trim().toLowerCase());
- assert.ok(nomes.every(Boolean));
- assert.equal(new Set(nomes).size,catalog.length);
+test('every product has a non-empty display name without internal PC codes',()=>{
+ // 14/10: Daniel pediu para não exibir "PC-…" ao cliente; o código fica só na mensagem de WhatsApp.
+ for(const p of catalog){assert.ok(String(p.nome||'').trim(),p.id);assert.doesNotMatch(p.nome,/PC-\d/,p.id);}
 });
 test('adds exactly 40 sanitized perfume references',()=>{
  const perfume=catalog.filter(p=>p.categoria==='perfumaria');

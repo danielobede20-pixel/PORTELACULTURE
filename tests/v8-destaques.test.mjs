@@ -21,7 +21,8 @@ test('Destaques Portela renders the 12 approved ids from the existing catalog ob
  assert.match(block,/image\.loading\s*=\s*'lazy'/);
  assert.match(block,/card\.type\s*=\s*'button'/);
  assert.match(block,/image\.alt\s*=\s*p\.nome/);
- assert.match(block,/ref\.textContent\s*=\s*p\.marca\s*\+\s*' · '\s*\+\s*p\.id/);
+ assert.match(block,/ref\.textContent\s*=\s*PortelaCatalog\.label\(p\.marca\)/);
+ assert.doesNotMatch(block,/textContent\s*=[^;]*p\.id/);
  assert.match(block,/addEventListener\('click',\(\)=>showProduct\(p\)\)/);
  assert.doesNotMatch(block,/preco|price|R\$|genero/i);
 });

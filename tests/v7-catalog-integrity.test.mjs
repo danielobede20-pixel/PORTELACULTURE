@@ -25,17 +25,20 @@ test('every photo is either a local file or registered for the media worker',()=
  for(const p of catalog)for(const src of p.fotos)assert.ok(existsSync('public/'+src)||Object.hasOwn(assets,src),p.id+' '+src);
 });
 
-test('same-name products of one brand and category are told apart by a public PC reference',()=>{
+test('same-name products stay distinct by id and photos, and PC codes are not shown to the customer',()=>{
  const groups=new Map();
  for(const p of catalog){const key=[p.marca,category(p),p.nome].join('|');groups.set(key,[...(groups.get(key)||[]),p]);}
  const duplicated=[...groups.values()].filter(g=>g.length>1);
- // Após a renomeação V7 (6ea59ae) pode não haver grupo repetido; se houver, cada item precisa de ID distinto.
- for(const group of duplicated)assert.equal(new Set(group.map(p=>p.id)).size,group.length);
- // The card shows the reference above the original name, and the detail shows it too.
- assert.match(ui,/ref\.textContent\s*=\s*p\.id/);
+ // Nomes podem repetir (mesmo modelo/cor); cada anúncio continua com ID e capa próprios.
+ for(const group of duplicated){assert.equal(new Set(group.map(p=>p.id)).size,group.length);assert.equal(new Set(group.map(p=>p.fotos[0])).size,group.length);}
+ // Nada de "PC-…" visível: cards e detalhe mostram a marca; o ID só vai para URL e WhatsApp.
+ assert.doesNotMatch(ui,/textContent\s*=[^;]*p\.id/);
+ assert.doesNotMatch(ui,/'Referência '\s*\+\s*p\.id/);
+ assert.doesNotMatch(ui,/\.alt\s*=[^;]*p\.id/);
+ assert.match(ui,/ref\.textContent\s*=\s*PortelaCatalog\.label\(p\.marca\)/);
  assert.match(ui,/title\.textContent\s*=\s*p\.nome/);
- assert.match(ui,/'Referência '\s*\+\s*p\.id/);
- assert.match(ui,/info\.append\(ref,\s*title,/);
+ const core=readFileSync('public/conversao-core.js','utf8');
+ assert.match(core,/Referência Portela: \$\{product\.id\}/);
 });
 
 test('V7 curated selection uses existing ids, matching brand/category, with no invented gender',()=>{
