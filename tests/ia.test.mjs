@@ -67,7 +67,7 @@ test('commercial questions get human confirmation and unknown model IDs fail clo
 });
 
 test('entire published catalog is supported with a small brand and line shortlist',async()=>{
- assert.equal(catalog.length,2818);
+ assert.equal(catalog.length,2815);
  const r=await assistant(req({messages:['Quero ASICS GEL-1130 preto e prata']}),env(),catalog,mockProvider(['PC-362'],'modelos',b=>{
   assert.ok(ids(b).includes('PC-362'));assert.ok(ids(b).length<=48);
   assert.ok(candidates(b).every(p=>p.marca==='ASICS'));

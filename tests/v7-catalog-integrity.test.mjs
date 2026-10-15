@@ -10,15 +10,16 @@ const category=p=>p.categoria||'tenis';
 const {mudancas}=JSON.parse(readFileSync('docs/v8-cat/manifesto.json','utf8'));
 const semV8Cat=items=>{const byId=new Map(items.map(p=>[p.id,structuredClone(p)]));for(const m of mudancas){const p=byId.get(m.id);assert.equal(p[m.campo]??null,m.depois,m.id+' '+m.campo);if(m.antes==null)delete p[m.campo];else p[m.campo]=m.antes;}return items.map(p=>byId.get(p.id));};
 
-test('catalog keeps 2818 unique ids with the same brand, category and photos',()=>{
- assert.equal(catalog.length,2818);
- assert.equal(new Set(catalog.map(p=>p.id)).size,2818);
+test('catalog keeps 2815 unique ids with the same brand, category and photos after authorized removal',()=>{
+ assert.equal(catalog.length,2815);
+ assert.equal(new Set(catalog.map(p=>p.id)).size,2815);
+ for(const id of ['PC-1819','PC-1820','PC-1821'])assert.equal(catalog.some(p=>p.id===id),false,id);
  for(const p of catalog){
   assert.match(p.id,/^PC-\d+$/);
   assert.ok(p.fotos?.length>0,p.id);
  }
  const hash=createHash('sha256').update(JSON.stringify(semV8Cat(catalog).map(p=>[p.id,p.marca,category(p),p.fotos]))).digest('hex');
- assert.equal(hash,'5070ce1c56024aa3300577ca57e6afd0bd7261bf8f9f64bb3dc358193114e3a3');
+ assert.equal(hash,'172ad647ca2ab37b5ffa346dd6c841ffe929249dc9cc39f53b8d2badb0cce758');
 });
 
 test('every photo is either a local file or registered for the media worker',()=>{
