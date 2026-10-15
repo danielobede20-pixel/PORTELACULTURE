@@ -1,0 +1,5 @@
+- Produção auditada em 15/10/2026: catalogo.json = 2.818 produtos / 2.818 IDs únicos; UI mostra 2.815 por regra intencional que oculta PC-1819/1820/1821 (Alo acessórios).
+- Imagens: 34.346/34.346 referências responderam HTTP 200 após retry; 0 produtos sem imagem e 0 duplicidade de ID.
+- QA real Edge em 1440x900, 390x844 e 320x700: 80/80 checks PASS (catálogo, filtros, produto, galeria, WhatsApp, quiz+D1, menu, links, overflow, console e rede).
+- Campos públicos: 0 URLs externas de fornecedor e 0 termos de fornecedor; quiz confirmou persistência no D1 em produção.
+- IA responde HTTP 200 com enabled=false; todos os fluxos ativos estão validados, restando apenas eventual ativação da IA com autorização de custo.
