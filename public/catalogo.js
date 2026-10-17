@@ -10,7 +10,7 @@ const menuControls = () => [...nav.querySelectorAll('a,summary')].filter(el => e
 nav.addEventListener('keydown', e => { if (e.key !== 'Tab' || !nav.classList.contains('open')) return; const controls = menuControls(); if ((!e.shiftKey && e.target === controls.at(-1)) || (e.shiftKey && e.target === controls[0])) { e.preventDefault(); menu.focus(); } });
 menu.addEventListener('keydown', e => { if (e.key === 'Tab' && nav.classList.contains('open')) { e.preventDefault(); const controls=menuControls(); (e.shiftKey ? controls.at(-1) : controls[0])?.focus(); } });
 const products = document.querySelector('#products'), status = document.querySelector('#resultado'), more = document.querySelector('#mais'), dialog = document.querySelector('#produto');
-let data = [], shown = 12, selectedProduct = null;
+let data = [], shown = 12, selectedProduct = null, query = '';
 let selection = {brand:'', line:'', category:'', gender:'', kind:''};
 const perfumeBox = document.querySelector('#perfumaria-filters'), perfumeSelects = {gender:document.querySelector('#filtro-genero'), brand:document.querySelector('#filtro-marca'), kind:document.querySelector('#filtro-tipo')};
 const productNote = document.querySelector('#product-note'), formNote = document.querySelector('#form-note'), defaultNotes = [productNote.textContent, formNote.textContent];
@@ -95,10 +95,10 @@ function showProduct(p) {
   dialog.showModal();
 }
 function render() {
-  const filtered = data.filter(p=>PortelaCatalog.matches(p,selection));
+  const filtered = data.filter(p=>PortelaCatalog.matches(p,selection) && PortelaCatalog.search(p, query));
   products.replaceChildren();
   filtered.slice(0, shown).forEach(p => { const card = document.createElement('button'), image = document.createElement('img'), info = document.createElement('div'), ref = document.createElement('p'), title = document.createElement('h3'), note = document.createElement('p'), action = document.createElement('span'); card.type = 'button'; card.className = 'product-card'; card.setAttribute('aria-label', 'Ver detalhes de ' + p.nome + ', ' + p.id); image.src = p.fotos[0]; image.alt = p.nome + ' — ' + p.id; image.loading = 'lazy'; image.decoding = 'async'; image.width = image.height = 960; info.className = 'product-info'; ref.textContent = p.id; title.textContent = p.nome; const perfume = p.categoria === 'perfumaria'; note.textContent = perfume ? PortelaCatalog.perfumeSpecs(p) : p.categoria==='acessorios' ? 'Sob encomenda · Consulte preço e detalhes' : 'Disponível sob encomenda · Consulte preço e tamanho'; action.textContent = perfume ? 'Consultar' : 'Ver detalhes'; info.append(ref, title, note, action); card.append(image, info); card.addEventListener('click', () => showProduct(p)); products.append(card); });
-  status.textContent = filtered.length ? `${filtered.length} ${filtered.length === 1 ? 'produto' : 'produtos'} · mostrando ${Math.min(shown, filtered.length)}` : 'Nenhum produto nesta seleção. Escolha outra marca ou categoria.';
+  status.textContent = filtered.length ? `${filtered.length} ${filtered.length === 1 ? 'produto' : 'produtos'} · mostrando ${Math.min(shown, filtered.length)}` : (query.trim() ? 'Nenhum produto para “' + query.trim() + '”. Tente outro termo ou limpe a busca.' : 'Nenhum produto nesta seleção. Escolha outra marca ou categoria.');
   more.hidden = filtered.length <= shown;
 }
 category.addEventListener('change', () => choose(PortelaCatalog.brandForCategory(data, selection.brand, category.value),'',category.value,false));
@@ -108,6 +108,11 @@ perfumeSelects.kind.addEventListener('change', () => choose(selection.brand,'','
 document.querySelector('#catalog-back').addEventListener('click',()=>choose());
 document.querySelectorAll('[data-catalog-category]').forEach(link=>link.addEventListener('click',e=>{e.preventDefault();choose('','',link.dataset.catalogCategory);}));
 more.addEventListener('click', () => { shown += 12; render(); });
+const searchInput = document.querySelector('#busca'); let searchTimer;
+const runSearch = () => { query = searchInput.value; shown = 12; render(); };
+searchInput?.addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 160); });
+searchInput?.addEventListener('search', runSearch);
+document.querySelector('.nav-search')?.addEventListener('click', e => { e.preventDefault(); closeMenu(); document.querySelector('#catalogo').scrollIntoView(); searchInput?.focus({preventScroll:true}); });
 dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
 fetch('catalogo.json?v=21',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
@@ -126,7 +131,7 @@ fetch('catalogo.json?v=21',{cache:'no-cache'}).then(r => { if (!r.ok) throw new 
   const group=PortelaCatalog.groups(data).find(g=>g.brand===maker);
   selection={brand:group ? maker : '',line:(group?.lines.some(l=>l.name===line) || (type==='acessorios' && data.some(p=>p.categoria==='acessorios' && PortelaCatalog.line(p)===line))) ? line : '',category:maker==='Alo' ? 'roupas' : [...category.options].some(o=>o.value===type) ? type : '',gender:'',kind:''};
   if(selection.category==='perfumaria'){selection.gender=perfumeOptions.gender.includes(params.get('genero')) ? params.get('genero') : '';selection.kind=perfumeOptions.kind.includes(params.get('tipo')) ? params.get('tipo') : '';}
-  category.value=selection.category;updateNavigation();render();
+  query=(params.get('busca')||'').slice(0,60);if(searchInput)searchInput.value=query;category.value=selection.category;updateNavigation();render();
   const curated = document.querySelector('#curated');
   ['PC-001', 'PC-003', 'PC-214'].forEach(id => { const p = data.find(item => item.id === id); if (!p) return; const card = document.createElement('button'), image = document.createElement('img'), info = document.createElement('div'), title = document.createElement('h3'), ref = document.createElement('p'), action = document.createElement('span'); card.type = 'button'; card.className = 'product-card'; card.setAttribute('aria-label', 'Seleção Portela: ' + p.nome + ', ' + p.id); image.src = p.fotos[0]; image.alt = p.nome; image.loading = 'lazy'; image.width = image.height = 720; info.className = 'product-info'; title.textContent = p.nome; ref.textContent = p.id + ' · Disponível sob encomenda'; action.textContent = 'Ver detalhes'; info.append(ref,title,action); card.append(image,info); card.addEventListener('click',()=>showProduct(p)); curated.append(card); });
   if (requested) { const p = data.find(item => item.id === requested); if (p) showProduct(p); else status.textContent = 'Referência não encontrada. Explore os modelos disponíveis ou consulte a loja.'; }

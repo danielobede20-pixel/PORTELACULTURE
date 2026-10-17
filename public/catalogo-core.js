@@ -30,5 +30,11 @@ const PortelaCatalog = (() => {
     });
     return [...result.values()].sort((a,b)=>a.label.localeCompare(b.label,'pt-BR')).map(g=>({...g, lines:[...g.lines].sort(([a],[b])=>a.localeCompare(b,'pt-BR',{numeric:true})).map(([name,count])=>({name,count}))}));
   }
-  return {visibleProducts, label, line, matches, brandForCategory, groups, perfumeOptions, perfumeSpecs};
+  function search(p, query = '') {
+    const terms = normalize(query).split(/\s+/).filter(Boolean);
+    if (!terms.length) return true;
+    const text = normalize([p.nome, p.marca, label(p.marca), line(p), p.categoria, p.categoria === 'tenis' ? 'tenis sneaker' : '', p.id, p.subtipo, p.genero, p.concentracao].filter(Boolean).join(' '));
+    return terms.every(term => text.includes(term));
+  }
+  return {visibleProducts, label, line, matches, search, brandForCategory, groups, perfumeOptions, perfumeSpecs};
 })();
