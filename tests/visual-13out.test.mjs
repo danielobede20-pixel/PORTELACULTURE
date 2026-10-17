@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync, existsSync} from 'node:fs';
 const html = readFileSync('public/index.html', 'utf8');
 const ui = readFileSync('public/catalogo.js', 'utf8');
 const catalog = JSON.parse(readFileSync('public/catalogo.json', 'utf8'));
@@ -32,4 +32,13 @@ test('links externos em nova aba usam rel=noopener', () => {
 test('catalogo integral de 2818 produtos com ids unicos', () => {
   assert.equal(catalog.length, 2818);
   assert.equal(new Set(catalog.map(p => p.id)).size, 2818);
+});
+
+test('abertura usa WebP otimizado com PNG original como fallback', () => {
+  const pic = html.match(/<picture>.*?<\/picture>/s)?.[0] || '';
+  assert.match(pic, /type="image\/webp"/);
+  assert.match(pic, /portela-culture-opening-900\.webp 900w/);
+  assert.match(pic, /<img class="brand-art" src="media\/portela-culture-opening\.png"/);
+  for (const f of ['portela-culture-opening.webp', 'portela-culture-opening-900.webp']) assert.ok(existsSync('public/media/' + f), f);
+  assert.match(readFileSync('public/brand-opening.css', 'utf8'), /\.brand-stage picture\{display:contents\}/);
 });
