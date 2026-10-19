@@ -1,6 +1,7 @@
 .hero.brand-opening{display:block;min-height:0;height:145svh;padding:0;background:#030303;overflow:visible;isolation:auto}
 .hero.brand-opening:before,.hero.brand-opening:after{display:none}
 .brand-stage{height:calc(100svh - 88px);min-height:520px;position:sticky;top:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#030303;overflow:hidden;padding:20px 24px 22px}
+.brand-stage picture{display:contents}
 .brand-art{display:block;position:relative;width:min(1120px,100%);flex:1;min-height:0;object-fit:contain;transform:scale(var(--brand-scale,1));transform-origin:center;filter:brightness(calc(1 + var(--brand-glow,0)*.08));will-change:transform}
 .brand-stage .actions{position:relative;z-index:1;margin:12px 0 0;justify-content:center;flex-wrap:wrap}.brand-stage .btn{background:#080808d9}.brand-stage .primary{background:var(--gold)}
 .brand-caption{position:relative;z-index:1;font-size:.67rem;color:#cec3ae;letter-spacing:.19em;margin:18px 0 0;text-align:center;text-transform:uppercase}.brand-caption a{padding:10px}.brand-caption a:after{content:' ↓';margin-left:12px}

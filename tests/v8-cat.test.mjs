@@ -63,13 +63,13 @@ test('small screens keep the floating WhatsApp compact and leave room after the 
  assert.match(rule[0],/min-height:44px/);
 });
 
-test('vitrine shows a real Adidas cap instead of the PC-1679 hoodie',()=>{
- const ui=readFileSync('public/catalogo.js','utf8');
- const block=ui.slice(ui.indexOf('const featured'),ui.indexOf('if (requested)'));
- assert.doesNotMatch(block,/PC-1679/);
- const cap=byId.get('PC-1706');
- assert.equal(cap.marca,'Adidas');assert.equal(cap.categoria,'acessorios');assert.match(cap.linha,/Bon/);
- assert.match(block,/'PC-1706'/);
+test('vitrine da abertura usa produtos reais, com marca e categoria corretas, sem o PC-1679',()=>{
+ // 19/10: a secao Destaques saiu na restauracao de 13/10; a vitrine agora fica na abertura (index.html).
+ const html=readFileSync('public/index.html','utf8');
+ const ids=[...html.matchAll(/class="show-item" href="\?produto=(PC-\d+)#catalogo"/g)].map(m=>m[1]);
+ assert.ok(ids.length>=8);
+ assert.ok(!ids.includes('PC-1679'));
+ for(const id of ids){const p=byId.get(id);assert.ok(p,id);assert.ok(['tenis','perfumaria','roupas','acessorios'].includes(p.categoria||'tenis'),id);}
 });
 
 test('floating WhatsApp hides only while scrolling down on small screens and never by transform',()=>{

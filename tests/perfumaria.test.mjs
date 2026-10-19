@@ -54,7 +54,8 @@ test('public catalog exposes no private supplier metadata or yuan/yen prices',()
 });
 test('perfumaria route and filter controls exist in the page and script',()=>{
  const html=readFileSync('public/index.html','utf8'),script=readFileSync('public/catalogo.js','utf8');
- for(const id of ['perfumaria-filters','filtro-genero','filtro-marca','filtro-tipo'])assert.ok(html.includes('id="'+id+'"'),id);
+ // 19/10: filtros removidos; perfumes abrem direto e os generos vem pelo menu e pelo painel Pesquisar.
+ for(const g of ['Unissex','Masculino','Feminino'])assert.ok(html.includes('data-catalog-gender="'+g+'"'),g);
  assert.ok(html.includes('data-catalog-category="perfumaria"'),'Perfumaria must be visible in the home categories');
  assert.ok(script.includes("params.get('categoria')")&&script.includes("'Consultar'"));
 });
