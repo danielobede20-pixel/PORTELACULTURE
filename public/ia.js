@@ -1,8 +1,8 @@
 const aiDialog=document.querySelector('#ia-dialog'),aiForm=document.querySelector('#ia-form'),aiInput=document.querySelector('#ia-message'),aiResults=document.querySelector('#ia-results'),aiStatus=document.querySelector('#ia-status'),aiSend=document.querySelector('#ia-send'),aiContact=document.querySelector('#ia-contact');
 let aiMessages=[],aiModels=[],aiCatalog;
-fetch('/api/ia').then(r=>r.json()).then(state=>{if(state.enabled)document.querySelector('.ai-invite').hidden=false;}).catch(()=>{});
+fetch('/api/ia').then(r=>r.json()).then(state=>{if(state.enabled){const invite=document.querySelector('.ai-invite');if(invite)invite.hidden=false;}}).catch(()=>{});
 function contact(){const text=['Olá, Portela! Vim da ajuda com IA do site.',...aiMessages.slice(-3).map(m=>'Minha preferência: '+m),...aiModels.map(p=>'Modelo: '+p.nome+' ('+p.id+')'), 'Quero confirmar condições e disponibilidade.'].join('\n');aiContact.href='https://wa.me/5561995158424?text='+encodeURIComponent(text);}
-document.querySelector('[data-open-ai]').addEventListener('click',()=>{aiDialog.showModal();aiInput.focus();});
+document.querySelector('[data-open-ai]')?.addEventListener('click',()=>{aiDialog.showModal();aiInput.focus();});
 aiDialog.querySelector('.close').addEventListener('click',()=>aiDialog.close());
 aiForm.addEventListener('submit',async e=>{
  e.preventDefault();const message=aiInput.value.trim();if(!message||aiSend.disabled)return;

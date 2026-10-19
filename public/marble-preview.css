@@ -229,3 +229,25 @@ footer{background:#050505;color:#a9a39a;border-top:0;padding:52px 0 110px}
   .audience-media img{max-height:170px}
 }
 @media(prefers-reduced-motion:reduce){.show-item,.category,.product-card{transition:none;transform:none}}
+
+/* Pesquisar por categoria e catálogo direto (19/10) */
+button.header-search{display:flex;align-items:center;justify-content:space-between;gap:12px;height:46px;padding:0 16px 0 18px;border:1px solid rgba(11,11,11,.18);border-radius:2px;background:rgba(255,255,255,.72);color:#5f574c;font:inherit;font-size:.9rem;cursor:pointer;transition:border-color .25s var(--ease-lux)}
+button.header-search:hover{border-color:#0b0b0b;color:var(--ink)}
+.catalog-chips{display:flex;gap:8px;margin:26px 0 8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.catalog-chips::-webkit-scrollbar{display:none}
+.catalog-chips a{flex:0 0 auto;padding:11px 18px;border:1px solid rgba(11,11,11,.22);border-radius:999px;background:var(--glass-strong);color:var(--ink);font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:background .25s var(--ease-lux),color .25s var(--ease-lux)}
+.catalog-chips a:hover{border-color:#0b0b0b}
+.catalog-chips a[aria-pressed=true]{background:#050505;border-color:#050505;color:#e1c98d}
+#resultado{margin:14px 0 0;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+.product-info p:first-child{font-size:.66rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-ink)}
+#pesquisar{width:min(520px,calc(100% - 28px));padding:44px 28px 28px;background:rgba(250,246,239,.97);color:var(--ink);border:1px solid var(--glass-line);border-top:2px solid #050505}
+#pesquisar::backdrop{background:rgba(10,8,5,.45);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#pesquisar .close{color:var(--ink)}
+#pesquisar .eyebrow{color:var(--gold-ink)}
+#pesquisar h2{font:500 2rem/1.1 var(--serif);margin:8px 0 18px}
+.search-list{display:grid}
+.search-list a{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:16px 4px;border-top:1px solid rgba(11,11,11,.12);font:500 1.35rem/1.2 var(--serif);color:var(--ink);transition:padding .25s var(--ease-lux),color .25s}
+.search-list a:hover{padding-left:12px;color:var(--gold-ink)}
+.search-list small{font:600 .66rem/1 Inter,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#6b645a}
+#pesquisar :focus-visible{outline-color:#050505}
+@media(max-width:1020px){button.header-search{display:none}}

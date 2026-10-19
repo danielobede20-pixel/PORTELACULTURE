@@ -36,7 +36,7 @@ test('UNISSEX visivel no menu e nas categorias usando dado verificado do catalog
   assert.ok(unissex.length > 0);
   assert.ok(unissex.every(p => p.categoria === 'perfumaria'));
   assert.ok(byId.get('PC-900001').genero === 'Unissex');
-  assert.equal((html.match(/href="\?categoria=perfumaria&genero=Unissex#catalogo"/g) || []).length, 2);
+  assert.ok((html.match(/data-catalog-gender="Unissex" href="\?genero=Unissex#catalogo"/g) || []).length >= 3);
   for (const g of ['Masculino', 'Feminino']) assert.ok(catalog.some(p => p.genero === g), g);
 });
 
@@ -45,10 +45,11 @@ test('sem precos, frete gratis, parcelamento ou carrinho inventados', () => {
   assert.doesNotMatch(html, /frete gr[aá]tis|12x|parcel|carrinho|favoritos/i);
 });
 
-test('busca do cabecalho reutiliza a busca do catalogo', () => {
-  assert.match(html, /<form class="header-search" id="header-search"[^>]*role="search"/);
-  assert.match(html, /<label class="visually-hidden" for="header-query">/);
-  assert.match(ui, /#header-search'\)\?\.addEventListener\('submit'/);
+test('codigos PC nao aparecem para o cliente', () => {
+  assert.doesNotMatch(html.replace(/<[^>]+>/g, ' '), /PC-\d/);
+  assert.doesNotMatch(ui, /ref\.textContent\s*=\s*p\.id/);
+  assert.doesNotMatch(ui, /'Refer[eê]ncia ' \+ p\.id/);
+  assert.doesNotMatch(ui, /alt = p\.nome \+ ' — ' \+ p\.id/);
 });
 
 test('vitrine interativa da abertura usa produtos reais e recortes existentes', () => {

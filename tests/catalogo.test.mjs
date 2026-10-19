@@ -32,7 +32,8 @@ test('every catalog product is reachable through its brand and model without typ
   assert.equal(match(p,{marca:p.marca,linha:core.line(p)}),true);
  }
  const page=readFileSync('public/index.html','utf8');
- // 17/10: busca digitada voltou a pedido do Daniel como complemento; a navegacao por marca e modelo continua sendo o caminho principal.
- assert.match(page,/id="marcas"/);
- assert.match(page,/id="catalog-lines"/);
+ // 19/10: catalogo direto por categoria (pedido do Daniel); marca e modelo seguem acessiveis pelo menu MARCAS.
+ assert.match(page,/id="nav-brands"/);
+ assert.match(page,/class="catalog-chips"/);
+ for (const cat of ['perfumaria','tenis','roupas','acessorios']) assert.match(page,new RegExp('data-chip data-catalog-category="'+cat+'"'));
 });

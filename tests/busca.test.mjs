@@ -30,8 +30,11 @@ test('termo inexistente retorna vazio', () => {
   assert.equal(find('zzzz-inexistente').length, 0);
 });
 
-test('campo de busca acessivel no catalogo e atalho no cabecalho', () => {
-  assert.match(html, /<label for="busca"[^>]*>[^<]*<input id="busca" type="search"/);
-  assert.match(html, /class="nav-search" href="#catalogo" aria-label="Buscar no catálogo"/);
-  assert.match(ui, /PortelaCatalog\.search\(p,\s*query\)/);
+test('Pesquisar abre painel de categorias, sem campo de texto nem quiz', () => {
+  assert.doesNotMatch(html, /<input id="busca"/);
+  assert.match(html, /<button type="button" class="header-search" data-open-search/);
+  assert.match(html, /<dialog id="pesquisar"[^>]*>.*<nav class="search-list"/s);
+  assert.match(ui, /function buildSearchPanel\(\)/);
+  assert.doesNotMatch(html, /data-open-quiz/);
+  assert.doesNotMatch(html, /data-open-ai/);
 });

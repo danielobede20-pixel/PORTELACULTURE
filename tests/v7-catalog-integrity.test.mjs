@@ -22,16 +22,16 @@ test('every photo is either a local file or registered for the media worker',()=
  for(const p of catalog)for(const src of p.fotos)assert.ok(existsSync('public/'+src)||Object.hasOwn(assets,src),p.id+' '+src);
 });
 
-test('same-name products of one brand and category are told apart by a public PC reference',()=>{
+test('same-name products of one brand and category are keep a unique internal reference',()=>{
  const groups=new Map();
  for(const p of catalog){const key=[p.marca,category(p),p.nome].join('|');groups.set(key,[...(groups.get(key)||[]),p]);}
  const duplicated=[...groups.values()].filter(g=>g.length>1);
  assert.ok(duplicated.length>0);
  for(const group of duplicated)assert.equal(new Set(group.map(p=>p.id)).size,group.length);
- // The card shows the reference above the original name, and the detail shows it too.
- assert.match(ui,/ref\.textContent\s*=\s*p\.id/);
+ // 19/10: o codigo nao aparece mais na tela; a referencia exata segue no link e na mensagem do WhatsApp.
+ assert.doesNotMatch(ui,/ref\.textContent\s*=\s*p\.id/);
  assert.match(ui,/title\.textContent\s*=\s*p\.nome/);
- assert.match(ui,/'Referência '\s*\+\s*p\.id/);
+ assert.match(ui,/searchParams\.set\('produto', p\.id\)/);
  assert.match(ui,/info\.append\(ref,\s*title,/);
 });
 
