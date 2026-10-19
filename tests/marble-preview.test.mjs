@@ -17,7 +17,7 @@ test('marmore claro como fundo global continuo e leve', () => {
 test('marca oficial preservada: brasao recortado do arquivo original e abertura em WebP', () => {
   assert.ok(existsSync('public/media/portela-crest-192.webp'));
   assert.match(html, /class="brand-crest"[^>]*><img src="media\/portela-crest-192\.webp"/);
-  assert.match(html, /media\/portela-culture-opening\.png/);
+  assert.match(html, /media\/portela-logo-integrado\.webp/);
 });
 
 test('imagens e referencias da home existem no catalogo real', () => {
@@ -49,4 +49,20 @@ test('busca do cabecalho reutiliza a busca do catalogo', () => {
   assert.match(html, /<form class="header-search" id="header-search"[^>]*role="search"/);
   assert.match(html, /<label class="visually-hidden" for="header-query">/);
   assert.match(ui, /#header-search'\)\?\.addEventListener\('submit'/);
+});
+
+test('vitrine interativa da abertura usa produtos reais e recortes existentes', () => {
+  const items = [...html.matchAll(/<a class="show-item" href="\?produto=(PC-\d+)#catalogo"[^>]*><span class="show-media"><img src="(media\/vitrine\/[^"]+)"/g)];
+  assert.ok(items.length >= 8);
+  for (const [, id, src] of items) { assert.ok(byId.has(id), id); assert.ok(existsSync('public/' + src), src); }
+  assert.match(html, /<script src="vitrine\.js\?v=\d+" defer><\/script>/);
+  const js = readFileSync('public/vitrine.js', 'utf8');
+  assert.match(js, /prefers-reduced-motion/);
+  assert.match(js, /visibilitychange/);
+  assert.match(html, /data-show="toggle"/);
+});
+
+test('cards de perfume usam recorte sem fundo para todos os 40 perfumes', () => {
+  for (const p of catalog.filter(p => p.categoria === 'perfumaria')) assert.ok(existsSync('public/media/vitrine/' + p.id.toLowerCase() + '.webp'), p.id);
+  assert.match(ui, /function setCardImage\(img, p\)/);
 });

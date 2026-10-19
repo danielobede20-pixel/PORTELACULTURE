@@ -21,7 +21,7 @@ test('visual de 13/10: ordem das secoes preservada', () => {
 test('visual de 13/10: selecao curada e perfumaria mantidas', () => {
   assert.match(ui, /\['PC-001', 'PC-003', 'PC-214'\]\.forEach/);
   assert.ok(html.includes('data-catalog-category="perfumaria"'));
-  assert.ok(html.includes('media/portela-culture-opening.png'));
+  assert.ok(html.includes('media/portela-logo-integrado.webp'));
 });
 
 test('links externos em nova aba usam rel=noopener', () => {
@@ -34,11 +34,8 @@ test('catalogo integral de 2818 produtos com ids unicos', () => {
   assert.equal(new Set(catalog.map(p => p.id)).size, 2818);
 });
 
-test('abertura usa WebP otimizado com PNG original como fallback', () => {
-  const pic = html.match(/<picture>.*?<\/picture>/s)?.[0] || '';
-  assert.match(pic, /type="image\/webp"/);
-  assert.match(pic, /portela-culture-opening-900\.webp 900w/);
-  assert.match(pic, /<img class="brand-art" src="media\/portela-culture-opening\.png"/);
-  for (const f of ['portela-culture-opening.webp', 'portela-culture-opening-900.webp']) assert.ok(existsSync('public/media/' + f), f);
-  assert.match(readFileSync('public/brand-opening.css', 'utf8'), /\.brand-stage picture\{display:contents\}/);
+test('abertura usa o brasao oficial integrado ao marmore, com a arte original preservada', () => {
+  assert.match(html, /<img class="brand-art" src="media\/portela-logo-integrado\.webp"/);
+  assert.match(html, /class="brand-sub-line">CULTURE</);
+  for (const f of ['portela-logo-integrado.webp', 'portela-culture-opening.png', 'portela-culture-opening.webp', 'portela-culture-opening-900.webp']) assert.ok(existsSync('public/media/' + f), f);
 });
