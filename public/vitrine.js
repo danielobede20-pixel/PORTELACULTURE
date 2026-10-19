@@ -1,19 +1,21 @@
-/* Vitrine em movimento da abertura: rolagem lateral com snap, avanço automático suave,
-   arrasto com o mouse e leve inclinação no hover. Respeita prefers-reduced-motion. */
+/* Vitrine em movimento da abertura: rolagem lateral com snap, avanço automático suave
+   (com botão de pausa), arrasto com o mouse e leve inclinação no hover.
+   Respeita prefers-reduced-motion e pausa fora da tela ou com a aba oculta. */
 (() => {
   const root = document.querySelector('.showcase');
-  if (!root) return;
-  const track = root.querySelector('.showcase-track');
+  const track = root?.querySelector('.showcase-track');
+  if (!root || !track) return;
   const bar = root.querySelector('.showcase-progress span');
+  const toggle = root.querySelector('[data-show="toggle"]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
-  let timer = 0, paused = false, visible = true;
+  let timer = 0, resumeTimer = 0, visible = true, hover = false, focus = false, userPaused = false;
 
   const step = () => {
     const item = track.querySelector('.show-item');
-    return item ? item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0) : 300;
+    return item ? item.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0) : 300;
   };
-  const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+  const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
   const move = dir => {
     if (dir > 0 && atEnd()) track.scrollTo({ left: 0, behavior: 'smooth' });
     else track.scrollBy({ left: dir * step(), behavior: 'smooth' });
@@ -23,38 +25,52 @@
     if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.max(.08, track.scrollLeft / max) : 1})`;
   };
   const stop = () => { clearInterval(timer); timer = 0; };
-  const start = () => {
-    stop();
-    if (reduce.matches || paused || !visible) return;
-    timer = setInterval(() => move(1), 3400);
+  const canPlay = () => !reduce.matches && !userPaused && visible && !hover && !focus && !document.hidden;
+  const start = () => { stop(); if (canPlay()) timer = setInterval(() => move(1), 3400); };
+  const syncToggle = () => {
+    if (!toggle) return;
+    const playing = !userPaused && !reduce.matches;
+    toggle.setAttribute('aria-pressed', String(!playing));
+    toggle.setAttribute('aria-label', playing ? 'Pausar movimento automático' : 'Retomar movimento automático');
+    toggle.textContent = playing ? '❚❚' : '▶';
+    toggle.hidden = reduce.matches;
   };
+  // Interação manual: pausa por alguns segundos e retoma sozinha
+  const nudge = () => { stop(); clearTimeout(resumeTimer); resumeTimer = setTimeout(start, 8000); };
 
-  root.querySelectorAll('[data-show]').forEach(b => b.addEventListener('click', () => {
-    move(b.dataset.show === 'next' ? 1 : -1); paused = true; stop();
+  root.querySelectorAll('[data-show="prev"],[data-show="next"]').forEach(b => b.addEventListener('click', () => {
+    move(b.dataset.show === 'next' ? 1 : -1); nudge();
   }));
+  toggle?.addEventListener('click', () => { userPaused = !userPaused; syncToggle(); start(); });
   track.addEventListener('scroll', () => requestAnimationFrame(progress), { passive: true });
-  ['pointerenter', 'focusin', 'touchstart'].forEach(e => track.addEventListener(e, () => { paused = true; stop(); }, { passive: true }));
-  ['pointerleave', 'focusout'].forEach(e => track.addEventListener(e, () => { paused = false; start(); }));
+  track.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { hover = true; stop(); } });
+  track.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { hover = false; start(); } });
+  track.addEventListener('focusin', () => { focus = true; stop(); });
+  track.addEventListener('focusout', e => { if (!track.contains(e.relatedTarget)) { focus = false; start(); } });
+  track.addEventListener('touchstart', nudge, { passive: true });
   track.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') { e.preventDefault(); move(1); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); move(-1); }
   });
 
-  // Arrasto com o mouse (no toque, a rolagem nativa já funciona)
-  let dragX = 0, dragLeft = 0, dragging = false, moved = false;
+  // Arrasto com o mouse: só vira "arrasto" depois de 5px, para não bloquear o clique no produto
+  let downX = 0, downLeft = 0, pressing = false, moved = false;
   track.addEventListener('pointerdown', e => {
-    if (e.pointerType !== 'mouse') return;
-    dragging = true; moved = false; dragX = e.clientX; dragLeft = track.scrollLeft;
-    track.classList.add('dragging');
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    pressing = true; moved = false; downX = e.clientX; downLeft = track.scrollLeft;
   });
   addEventListener('pointermove', e => {
-    if (!dragging) return;
-    const dx = e.clientX - dragX;
-    if (Math.abs(dx) > 4) moved = true;
-    track.scrollLeft = dragLeft - dx;
+    if (!pressing) return;
+    const dx = e.clientX - downX;
+    if (!moved && Math.abs(dx) > 5) { moved = true; track.classList.add('dragging'); }
+    if (moved) track.scrollLeft = downLeft - dx;
   });
-  addEventListener('pointerup', () => { if (dragging) { dragging = false; track.classList.remove('dragging'); } });
-  track.addEventListener('click', e => { if (moved) { e.preventDefault(); moved = false; } }, true);
+  addEventListener('pointerup', () => {
+    if (!pressing) return;
+    pressing = false; track.classList.remove('dragging');
+    if (moved) setTimeout(() => { moved = false; }, 0);
+  });
+  track.addEventListener('click', e => { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
 
   // Inclinação sutil acompanhando o cursor
   if (fine.matches && !reduce.matches) {
@@ -69,8 +85,9 @@
   }
 
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; visible ? start() : stop(); }, { threshold: .25 }).observe(track);
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; start(); }, { threshold: .25 }).observe(track);
   }
-  reduce.addEventListener?.('change', start);
-  progress(); start();
+  document.addEventListener('visibilitychange', start);
+  reduce.addEventListener?.('change', () => { syncToggle(); start(); });
+  syncToggle(); progress(); start();
 })();

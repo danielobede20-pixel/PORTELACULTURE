@@ -25,6 +25,8 @@ dialog .btn:not(.primary):hover{background:#e1c98d;border-color:#e1c98d;color:#0
 dialog .btn.primary{background:#bc9b65;border-color:#bc9b65;color:#050505}
 dialog :focus-visible,.top :focus-visible,.links :focus-visible,footer :focus-visible,.whatsapp:focus-visible{outline-color:#e1c98d}
 .contact-feedback{color:#f2efe9}
+dialog .eyebrow,footer .eyebrow{color:#d8c39a}
+.show-toggle{font-size:.62rem;letter-spacing:-.1em}.show-toggle[hidden]{display:none}
 
 /* Barra superior */
 .top{display:flex;align-items:center;justify-content:center;gap:clamp(18px,4vw,56px);min-height:36px;padding:6px 16px;background:#050505;color:#d8c39a;font-size:.64rem;font-weight:600;letter-spacing:.22em;border:0}
@@ -92,7 +94,6 @@ header{position:sticky;top:0;z-index:30;background:rgba(250,246,239,.84);-webkit
 .showcase-track{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(200px,21vw,280px);gap:clamp(12px,1.6vw,22px);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:max(20px,calc((100vw - 1280px)/2));padding:18px max(20px,calc((100vw - 1280px)/2)) 26px;scrollbar-width:none;cursor:grab}
 .showcase-track::-webkit-scrollbar{display:none}
 .showcase-track.dragging{cursor:grabbing;scroll-snap-type:none}
-.showcase-track.dragging .show-item{pointer-events:none}
 .show-item{scroll-snap-align:start;display:flex;flex-direction:column;gap:6px;padding:18px 18px 20px;border-radius:2px;background:var(--glass);border:1px solid var(--glass-line);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transform:perspective(900px) rotateX(var(--rx,0)) rotateY(var(--ry,0));transition:transform .45s var(--ease-lux),box-shadow .45s var(--ease-lux),background .45s var(--ease-lux)}
 .show-media{position:relative;display:block;height:clamp(190px,17vw,240px);margin-bottom:8px}
 .show-media:after{content:"";position:absolute;left:18%;right:18%;bottom:4%;height:9%;border-radius:50%;background:radial-gradient(closest-side,rgba(40,28,10,.32),transparent);z-index:0;transition:transform .6s var(--ease-lux),opacity .6s}
