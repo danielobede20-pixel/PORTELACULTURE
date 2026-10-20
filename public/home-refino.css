@@ -25,7 +25,7 @@
 
 /* Rodapé: informações comerciais compactas */
 .foot-info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; padding-top: 36px; padding-bottom: 26px; border-bottom: 1px solid rgba(242, 239, 233, .14); margin-bottom: 22px; }
-.foot-info b { display: block; font: 600 .64rem/1 Inter, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #c9a35b; margin-bottom: 8px; }
+.foot-info b { display: block; font: 600 .64rem/1.4 Inter, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #c9a35b; margin-bottom: 8px; }
 .foot-info p { margin: 0; font-size: .84rem; line-height: 1.55; color: rgba(242, 239, 233, .78); }
 .foot-info a { color: #f2efe9; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(201, 163, 91, .6); }
 @media (min-width: 900px) { .foot-info { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
@@ -53,3 +53,6 @@
 }
 .category { justify-content: flex-start; align-items: stretch; }
 .category .cat-content { flex: 1; width: 100%; margin: 0; text-align: left; align-self: stretch; }
+
+/* Telas muito estreitas (320 px): título da categoria cabe sem cortar */
+@media (max-width: 359px) { .category h3 { font-size: 1.05rem; letter-spacing: .03em; } }
