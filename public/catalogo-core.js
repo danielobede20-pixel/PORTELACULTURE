@@ -22,6 +22,9 @@ const PortelaCatalog = (() => {
   function perfumeSpecs(p) {
     return [p.marca, p.concentracao, p.volume ? p.volume + ' ml' : ''].filter(Boolean).join(' · ');
   }
+  function price(p) {
+    return typeof p?.preco === 'number' && p.preco > 0 ? 'R$ ' + p.preco.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}) : '';
+  }
   function groups(items, category = '') {
     const result = new Map();
     items.filter(p => !category || (p.categoria || 'tenis') === category).forEach(p => {
@@ -36,5 +39,5 @@ const PortelaCatalog = (() => {
     const text = normalize([p.nome, p.marca, label(p.marca), line(p), p.categoria, p.categoria === 'tenis' ? 'tenis sneaker' : '', p.id, p.subtipo, p.genero, p.concentracao].filter(Boolean).join(' '));
     return terms.every(term => text.includes(term));
   }
-  return {visibleProducts, label, line, matches, search, brandForCategory, groups, perfumeOptions, perfumeSpecs};
+  return {visibleProducts, label, line, matches, search, brandForCategory, groups, perfumeOptions, perfumeSpecs, price};
 })();

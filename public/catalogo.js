@@ -81,8 +81,11 @@ function showProduct(p) {
   const perfume = p.categoria === 'perfumaria';
   document.querySelector('#product-ref').textContent = perfume ? [PortelaCatalog.perfumeSpecs(p), p.genero].filter(Boolean).join(' · ') : [PortelaCatalog.label(p.marca), CATEGORY_LABELS[p.categoria || 'tenis']].filter(Boolean).join(' · ');
   sizeInput.closest('label').hidden = perfume;
-  productNote.textContent = perfume ? 'Consulte preço, disponibilidade e prazo com a loja pelo WhatsApp.' : p.categoria==='acessorios' ? 'Consulte preço, detalhes e prazo com a loja pelo WhatsApp.' : defaultNotes[0];
-  formNote.textContent = perfume ? 'A cidade entra na mensagem que você enviará pelo WhatsApp. Preço e disponibilidade serão confirmados pela loja.' : defaultNotes[1];
+  const priced = PortelaCatalog.price(p); let priceTag = document.querySelector('#product-price');
+  if (!priceTag) { priceTag = document.createElement('p'); priceTag.id = 'product-price'; priceTag.className = 'product-price'; document.querySelector('#product-ref').after(priceTag); }
+  priceTag.textContent = priced; priceTag.hidden = !priced;
+  productNote.textContent = perfume && priced ? 'Confirme disponibilidade e prazo com a loja pelo WhatsApp.' : perfume ? 'Consulte preço, disponibilidade e prazo com a loja pelo WhatsApp.' : p.categoria==='acessorios' ? 'Consulte preço, detalhes e prazo com a loja pelo WhatsApp.' : defaultNotes[0];
+  formNote.textContent = perfume ? (priced ? 'A cidade entra na mensagem que você enviará pelo WhatsApp. Disponibilidade e prazo serão confirmados pela loja.' : 'A cidade entra na mensagem que você enviará pelo WhatsApp. Preço e disponibilidade serão confirmados pela loja.') : defaultNotes[1];
   const mainImage = document.querySelector('#detail-image'), thumbs = document.querySelector('#thumbs');
   thumbs.replaceChildren();
   p.fotos.forEach((src, i) => { const button = document.createElement('button'), img = document.createElement('img'); button.type = 'button'; button.setAttribute('aria-label', 'Ver foto ' + (i + 1)); button.setAttribute('aria-pressed', String(i === 0)); img.src = src; img.alt = ''; img.loading = 'lazy'; button.append(img); button.addEventListener('click', () => { mainImage.src = src; mainImage.alt = p.nome + ' — foto ' + (i + 1); thumbs.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === button))); }); thumbs.append(button); });
@@ -95,7 +98,7 @@ function showProduct(p) {
 function render() {
   const filtered = data.filter(p=>PortelaCatalog.matches(p,selection) && PortelaCatalog.search(p, query));
   products.replaceChildren();
-  filtered.slice(0, shown).forEach(p => { const card = document.createElement('button'), image = document.createElement('img'), info = document.createElement('div'), ref = document.createElement('p'), title = document.createElement('h3'), note = document.createElement('p'), action = document.createElement('span'); card.type = 'button'; card.className = 'product-card'; card.setAttribute('aria-label', 'Ver detalhes de ' + p.nome); setCardImage(image, p); image.alt = p.nome; image.loading = 'lazy'; image.decoding = 'async'; image.width = image.height = 960; info.className = 'product-info'; ref.textContent = PortelaCatalog.label(p.marca); title.textContent = p.nome; const perfume = p.categoria === 'perfumaria'; note.textContent = perfume ? PortelaCatalog.perfumeSpecs(p) : p.categoria==='acessorios' ? 'Sob encomenda · Consulte preço e detalhes' : 'Disponível sob encomenda · Consulte preço e tamanho'; action.textContent = perfume ? 'Consultar' : 'Ver detalhes'; info.append(ref, title, note, action); card.append(image, info); card.addEventListener('click', () => showProduct(p)); products.append(card); });
+  filtered.slice(0, shown).forEach(p => { const card = document.createElement('button'), image = document.createElement('img'), info = document.createElement('div'), ref = document.createElement('p'), title = document.createElement('h3'), note = document.createElement('p'), action = document.createElement('span'); card.type = 'button'; card.className = 'product-card'; card.setAttribute('aria-label', 'Ver detalhes de ' + p.nome); setCardImage(image, p); image.alt = p.nome; image.loading = 'lazy'; image.decoding = 'async'; image.width = image.height = 960; info.className = 'product-info'; ref.textContent = PortelaCatalog.label(p.marca); title.textContent = p.nome; const perfume = p.categoria === 'perfumaria'; note.textContent = perfume ? PortelaCatalog.perfumeSpecs(p) : p.categoria==='acessorios' ? 'Sob encomenda · Consulte preço e detalhes' : 'Disponível sob encomenda · Consulte preço e tamanho'; action.textContent = perfume ? 'Consultar' : 'Ver detalhes'; const priced = PortelaCatalog.price(p); if (priced) { const tag = document.createElement('p'); tag.className = 'product-price'; tag.textContent = priced; info.append(ref, title, note, tag, action); } else info.append(ref, title, note, action); card.append(image, info); card.addEventListener('click', () => showProduct(p)); products.append(card); });
   status.textContent = filtered.length ? `${filtered.length} ${filtered.length === 1 ? 'produto' : 'produtos'}` : (query.trim() ? 'Nenhum produto para “' + query.trim() + '”. Tente outro termo ou limpe a busca.' : 'Nenhum produto nesta categoria no momento.');
   more.hidden = filtered.length <= shown;
 }
@@ -120,7 +123,7 @@ searchDialog?.querySelector('.close')?.addEventListener('click', () => searchDia
 searchDialog?.addEventListener('click', e => { if (e.target === searchDialog) searchDialog.close(); });
 dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
-fetch('catalogo.json?v=21',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
+fetch('catalogo.json?v=22',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
   data = PortelaCatalog.visibleProducts(items);
   const quizBrand=document.querySelector('#quiz-form select[name="brand"]');
   if (quizBrand) { quizBrand.replaceChildren(new Option('Prefiro não informar',''));
