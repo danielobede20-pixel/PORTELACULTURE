@@ -1,0 +1,55 @@
+/* Refino da home (19/10): home compacta, imagens em alta, ajuda no rodapé.
+   Usa somente os tokens e componentes existentes — sem nova identidade visual. */
+
+/* Catálogo fica fora da home; aparece ao escolher categoria, marca, busca ou #catalogo */
+.home-compact #catalogo { display: none; }
+
+/* Vitrine do topo: fotos em alta qualidade preenchendo o card */
+.show-item.is-photo { padding: 10px 10px 16px; }
+.show-item.is-photo .show-media { height: auto; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 2px; margin-bottom: 10px; }
+.show-item.is-photo .show-media:after { display: none; }
+.show-item.is-photo .show-media img { padding: 0; object-fit: cover; filter: none; animation: none; transform: scale(1.001); transition: transform 1.2s var(--ease-lux, ease); }
+.show-item.is-photo:hover .show-media img { transform: scale(1.06); }
+.show-item.is-photo .show-name, .show-item.is-photo .show-meta { padding: 0 8px; }
+
+/* Categorias: imagens editoriais 3D */
+.category .cat-media.is-photo { height: auto; aspect-ratio: 4 / 3; overflow: hidden; }
+.category .cat-media.is-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: none; animation: none; transition: transform 1.2s var(--ease-lux, ease); }
+.category:hover .cat-media.is-photo img { transform: scale(1.06); }
+
+/* Entrada suave das fotos ao rolar */
+@media (prefers-reduced-motion: no-preference) {
+  .home-js .is-photo img { opacity: 0; transition: opacity .9s ease, transform 1.2s var(--ease-lux, ease); }
+  .home-js .is-photo img.is-loaded { opacity: 1; }
+}
+
+/* Rodapé: informações comerciais compactas */
+.foot-info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 28px; padding-top: 36px; padding-bottom: 26px; border-bottom: 1px solid rgba(242, 239, 233, .14); margin-bottom: 22px; }
+.foot-info b { display: block; font: 600 .64rem/1 Inter, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #c9a35b; margin-bottom: 8px; }
+.foot-info p { margin: 0; font-size: .84rem; line-height: 1.55; color: rgba(242, 239, 233, .78); }
+.foot-info a { color: #f2efe9; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(201, 163, 91, .6); }
+@media (min-width: 900px) { .foot-info { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* Painel "Como pedir" (antes uma seção longa na home) */
+.help-dialog { max-width: 640px; width: calc(100% - 32px); max-height: calc(100dvh - 48px); overflow: auto; padding: 32px 28px; }
+.help-dialog h2 { font: 500 2rem/1.1 var(--serif, serif); margin: 6px 0 18px; }
+.help-dialog .steps { display: grid; gap: 14px; margin: 0 0 20px; padding: 0; list-style: none; }
+.help-dialog .steps li { padding-top: 12px; }
+.help-dialog .steps h3 { font-size: 1.15rem; margin: 4px 0; }
+.help-dialog .steps p { margin: 0; font-size: .88rem; }
+.help-facts { display: grid; gap: 12px; margin: 0 0 22px; }
+.help-facts dt { font: 600 .64rem/1 Inter, sans-serif; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-ink, #8a6a2e); margin-bottom: 4px; }
+.help-facts dd { margin: 0; font-size: .9rem; line-height: 1.5; color: var(--ink-muted, #4a4640); }
+
+/* Categorias no celular: as 5 visíveis sem arrastar (2 colunas + Unissex em largura total) */
+@media (max-width: 899px) {
+  .categories { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row; grid-auto-columns: auto; overflow: visible; scroll-snap-type: none; padding-bottom: 0; gap: 12px; margin-top: 24px; }
+  .categories .category:last-child { grid-column: 1 / -1; }
+  .categories .category:last-child .cat-media.is-photo { aspect-ratio: 16 / 7; }
+  .category .cat-content { padding: 12px 14px 14px; }
+  .category h3 { font-size: 1.25rem; }
+  .category p { display: none; }
+  .category .cat-action { margin-top: 8px; }
+}
+.category { justify-content: flex-start; align-items: stretch; }
+.category .cat-content { flex: 1; width: 100%; margin: 0; text-align: left; align-self: stretch; }
