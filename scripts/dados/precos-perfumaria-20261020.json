@@ -34,7 +34,12 @@
   "PC-900036": 459.9,
   "PC-900038": 672.9,
   "PC-900039": 494.9,
-  "PC-900040": 246.9
+  "PC-900040": 246.9,
+  "PC-900028": 516.9,
+  "PC-900012": 386.9,
+  "PC-900014": 158.9,
+  "PC-900022": 162.9,
+  "PC-900037": 606.9
  },
  "novos": [
   {
@@ -379,6 +384,135 @@
     "media/perfumaria/pc-900063-calvin-klein-ck-one-edt-100ml.webp"
    ],
    "preco": 274.9
+  },
+  {
+   "id": "PC-900064",
+   "nome": "LATTAFA ASAD ZANZIBAR EDP M 100ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900064-lattafa-asad-zanzibar-edp-m-100ml.webp"
+   ],
+   "preco": 207.9
+  },
+  {
+   "id": "PC-900065",
+   "nome": "AFNAN TURATHI BLUE EDP M 90ML",
+   "marca": "AFNAN",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 90,
+   "fotos": [
+    "media/perfumaria/pc-900065-afnan-turathi-blue-edp-m-90ml.webp"
+   ],
+   "preco": 257.9
+  },
+  {
+   "id": "PC-900066",
+   "nome": "AL HARAMAIN AMBER OUD WHITE EDP 100ML",
+   "marca": "ALHARAMAIN",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Unissex",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900066-al-haramain-amber-oud-white-edp-100ml.webp"
+   ],
+   "preco": 321.9
+  },
+  {
+   "id": "PC-900067",
+   "nome": "VICTORIA'S SECRET BARE VANILLA BODY SPLASH 250ML",
+   "marca": "VICTORIA'S SECRET",
+   "categoria": "perfumaria",
+   "subtipo": "Body Splash",
+   "linha": "Body Splash",
+   "genero": "Feminino",
+   "volume": 250,
+   "fotos": [
+    "media/perfumaria/pc-900067-victoria-s-secret-bare-vanilla-body-splash-250ml.webp"
+   ],
+   "preco": 131.9
+  },
+  {
+   "id": "PC-900068",
+   "nome": "VICTORIA'S SECRET LOVE SPELL BODY SPLASH 250ML",
+   "marca": "VICTORIA'S SECRET",
+   "categoria": "perfumaria",
+   "subtipo": "Body Splash",
+   "linha": "Body Splash",
+   "genero": "Feminino",
+   "volume": 250,
+   "fotos": [
+    "media/perfumaria/pc-900068-victoria-s-secret-love-spell-body-splash-250ml.webp"
+   ],
+   "preco": 154.9
+  },
+  {
+   "id": "PC-900069",
+   "nome": "VICTORIA'S SECRET COCONUT PASSION BODY SPLASH 250ML",
+   "marca": "VICTORIA'S SECRET",
+   "categoria": "perfumaria",
+   "subtipo": "Body Splash",
+   "linha": "Body Splash",
+   "genero": "Feminino",
+   "volume": 250,
+   "fotos": [
+    "media/perfumaria/pc-900069-victoria-s-secret-coconut-passion-body-splash-250ml.webp"
+   ],
+   "preco": 123.9
+  },
+  {
+   "id": "PC-900070",
+   "nome": "VICTORIA'S SECRET VELVET PETALS BODY SPLASH 250ML",
+   "marca": "VICTORIA'S SECRET",
+   "categoria": "perfumaria",
+   "subtipo": "Body Splash",
+   "linha": "Body Splash",
+   "genero": "Feminino",
+   "volume": 250,
+   "fotos": [
+    "media/perfumaria/pc-900070-victoria-s-secret-velvet-petals-body-splash-250ml.webp"
+   ],
+   "preco": 137.9
+  },
+  {
+   "id": "PC-900071",
+   "nome": "VICTORIA'S SECRET AQUA KISS BODY SPLASH 250ML",
+   "marca": "VICTORIA'S SECRET",
+   "categoria": "perfumaria",
+   "subtipo": "Body Splash",
+   "linha": "Body Splash",
+   "genero": "Feminino",
+   "volume": 250,
+   "fotos": [
+    "media/perfumaria/pc-900071-victoria-s-secret-aqua-kiss-body-splash-250ml.webp"
+   ],
+   "preco": 161.9
+  },
+  {
+   "id": "PC-900072",
+   "nome": "VICTORIA'S SECRET BARE VANILLA BODY LOTION 236ML",
+   "marca": "VICTORIA'S SECRET",
+   "categoria": "perfumaria",
+   "subtipo": "Hidratante",
+   "linha": "Hidratante",
+   "genero": "Feminino",
+   "volume": 236,
+   "fotos": [
+    "media/perfumaria/pc-900072-victoria-s-secret-bare-vanilla-body-lotion-236ml.webp"
+   ],
+   "preco": 132.9
   }
  ]
 }

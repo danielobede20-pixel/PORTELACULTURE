@@ -11,8 +11,8 @@ const {mudancas}=JSON.parse(readFileSync('docs/v8-cat/manifesto.json','utf8'));
 const semV8Cat=items=>{const byId=new Map(items.map(p=>[p.id,structuredClone(p)]));for(const m of mudancas){const p=byId.get(m.id);assert.equal(p[m.campo]??null,m.depois,m.id+' '+m.campo);if(m.antes==null)delete p[m.campo];else p[m.campo]=m.antes;}return items.map(p=>byId.get(p.id));};
 
 test('catalog keeps 2818 unique ids with the same brand, category and photos',()=>{
- assert.equal(catalog.length,2841); // 20/10: +23 perfumes no fim
- assert.equal(new Set(catalog.map(p=>p.id)).size,2841);
+ assert.equal(catalog.length,2850); // 20/10: +32 perfumes no fim
+ assert.equal(new Set(catalog.map(p=>p.id)).size,2850);
  for(const p of catalog){
   assert.match(p.id,/^PC-\d+$/);
   assert.ok(p.fotos?.length>0,p.id);

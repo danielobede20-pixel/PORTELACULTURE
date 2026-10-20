@@ -8,8 +8,8 @@ const conversion=context.PortelaCore;
 const catalog=JSON.parse(readFileSync('public/catalogo.json','utf8'));
 const perfumes=catalog.filter(p=>p.categoria==='perfumaria');
 
-test('perfumaria has 63 items, each with a local image and complete labels',()=>{
- assert.equal(perfumes.length,63);
+test('perfumaria has 72 items, each with a local image and complete labels',()=>{
+ assert.equal(perfumes.length,72);
  for(const p of perfumes){
   assert.ok(p.marca&&p.genero&&p.volume&&['Perfume','Kit','Body Splash','Hidratante'].includes(p.subtipo),p.id);
   assert.ok(p.fotos.every(src=>src.startsWith('media/perfumaria/')&&existsSync('public/'+src)),p.id);
@@ -17,10 +17,10 @@ test('perfumaria has 63 items, each with a local image and complete labels',()=>
 });
 test('gender, brand and type filters combine inside perfumaria only',()=>{
  const pick=selection=>perfumes.filter(p=>core.matches(p,{category:'perfumaria',...selection}));
- assert.equal(pick({}).length,63);
+ assert.equal(pick({}).length,72);
  assert.ok(pick({gender:'Feminino'}).every(p=>p.genero==='Feminino')&&pick({gender:'Feminino'}).length>0);
  assert.ok(pick({kind:'Kit'}).every(p=>p.subtipo==='Kit')&&pick({kind:'Kit'}).length>0);
- assert.equal(['Kit','Perfume','Body Splash','Hidratante'].reduce((n,kind)=>n+pick({kind}).length,0),63);
+ assert.equal(['Kit','Perfume','Body Splash','Hidratante'].reduce((n,kind)=>n+pick({kind}).length,0),72);
  const brand=perfumes[0].marca,combined=pick({brand,gender:perfumes[0].genero,kind:perfumes[0].subtipo});
  assert.ok(combined.includes(perfumes[0])&&combined.every(p=>p.marca===brand));
  assert.equal(catalog.filter(p=>p.categoria!=='perfumaria'&&core.matches(p,{category:'perfumaria'})).length,0);
@@ -61,7 +61,7 @@ test('perfumaria route and filter controls exist in the page and script',()=>{
 });
 test('perfumaria public data carries no supplier code: no codigo field and photos named by Portela reference',()=>{
  const worker=JSON.parse(readFileSync('worker/catalog.json','utf8')).filter(p=>p.categoria==='perfumaria');
- assert.equal(worker.length,63);
+ assert.equal(worker.length,72);
  for(const p of [...perfumes,...worker])assert.ok(!('codigo' in p),p.id+' expõe codigo');
  for(const p of perfumes){
   const ref=p.id.toLowerCase();
@@ -80,7 +80,7 @@ test('kit names use Portuguese wording without inventing quantities',()=>{
 });
 test('prices: public price is a positive BRL number, shown on card and detail, never in the WhatsApp message',()=>{
  const priced=perfumes.filter(p=>'preco' in p);
- assert.ok(priced.length>=55,'expected most perfumes priced, got '+priced.length);
+ assert.ok(priced.length===72,'expected most perfumes priced, got '+priced.length);
  for(const p of priced){assert.equal(typeof p.preco,'number',p.id);assert.ok(p.preco>50&&p.preco<2000,p.id+' preço fora da faixa');}
  assert.equal(core.price({preco:152.9}),'R$ 152,90'.replace(' ',String.fromCharCode(160)).replace(String.fromCharCode(160),' '));
  assert.equal(core.price({}),'');
