@@ -8,26 +8,26 @@ const conversion=context.PortelaCore;
 const catalog=JSON.parse(readFileSync('public/catalogo.json','utf8'));
 const perfumes=catalog.filter(p=>p.categoria==='perfumaria');
 
-test('perfumaria has 40 items, each with a local image and complete labels',()=>{
- assert.equal(perfumes.length,40);
+test('perfumaria has 63 items, each with a local image and complete labels',()=>{
+ assert.equal(perfumes.length,63);
  for(const p of perfumes){
-  assert.ok(p.marca&&p.genero&&p.volume&&['Perfume','Kit'].includes(p.subtipo),p.id);
+  assert.ok(p.marca&&p.genero&&p.volume&&['Perfume','Kit','Body Splash','Hidratante'].includes(p.subtipo),p.id);
   assert.ok(p.fotos.every(src=>src.startsWith('media/perfumaria/')&&existsSync('public/'+src)),p.id);
  }
 });
 test('gender, brand and type filters combine inside perfumaria only',()=>{
  const pick=selection=>perfumes.filter(p=>core.matches(p,{category:'perfumaria',...selection}));
- assert.equal(pick({}).length,40);
+ assert.equal(pick({}).length,63);
  assert.ok(pick({gender:'Feminino'}).every(p=>p.genero==='Feminino')&&pick({gender:'Feminino'}).length>0);
  assert.ok(pick({kind:'Kit'}).every(p=>p.subtipo==='Kit')&&pick({kind:'Kit'}).length>0);
- assert.equal(pick({kind:'Kit'}).length+pick({kind:'Perfume'}).length,40);
+ assert.equal(['Kit','Perfume','Body Splash','Hidratante'].reduce((n,kind)=>n+pick({kind}).length,0),63);
  const brand=perfumes[0].marca,combined=pick({brand,gender:perfumes[0].genero,kind:perfumes[0].subtipo});
  assert.ok(combined.includes(perfumes[0])&&combined.every(p=>p.marca===brand));
  assert.equal(catalog.filter(p=>p.categoria!=='perfumaria'&&core.matches(p,{category:'perfumaria'})).length,0);
 });
 test('filter options are derived only from perfumaria and card specs show brand, concentration and volume',()=>{
  const options=core.perfumeOptions(catalog);
- assert.deepEqual(Array.from(options.kind),['Kit','Perfume']);
+ assert.deepEqual(Array.from(options.kind),['Body Splash','Hidratante','Kit','Perfume']);
  assert.ok(options.gender.includes('Masculino')&&options.gender.includes('Feminino'));
  assert.ok(options.brand.every(b=>perfumes.some(p=>p.marca===b)));
  assert.equal(core.perfumeSpecs({marca:'LATTAFA',concentracao:'EDP',volume:100}),['LATTAFA','EDP','100 ml'].join(String.fromCharCode(32,183,32)));
@@ -61,7 +61,7 @@ test('perfumaria route and filter controls exist in the page and script',()=>{
 });
 test('perfumaria public data carries no supplier code: no codigo field and photos named by Portela reference',()=>{
  const worker=JSON.parse(readFileSync('worker/catalog.json','utf8')).filter(p=>p.categoria==='perfumaria');
- assert.equal(worker.length,40);
+ assert.equal(worker.length,63);
  for(const p of [...perfumes,...worker])assert.ok(!('codigo' in p),p.id+' expõe codigo');
  for(const p of perfumes){
   const ref=p.id.toLowerCase();
@@ -77,4 +77,19 @@ test('kit names use Portuguese wording without inventing quantities',()=>{
   assert.ok(!/PIEZAS/i.test(p.nome),p.id+' ainda tem PIEZAS');
   assert.ok(!/\bpeças\b/.test(p.nome)||/\d peças/.test(p.nome),p.id+' peças sem quantidade');
  }
+});
+test('prices: public price is a positive BRL number, shown on card and detail, never in the WhatsApp message',()=>{
+ const priced=perfumes.filter(p=>'preco' in p);
+ assert.ok(priced.length>=55,'expected most perfumes priced, got '+priced.length);
+ for(const p of priced){assert.equal(typeof p.preco,'number',p.id);assert.ok(p.preco>50&&p.preco<2000,p.id+' preço fora da faixa');}
+ assert.equal(core.price({preco:152.9}),'R$ 152,90'.replace(' ',String.fromCharCode(160)).replace(String.fromCharCode(160),' '));
+ assert.equal(core.price({}),'');
+ assert.equal(catalog.filter(p=>p.categoria!=='perfumaria'&&'preco' in p).length,0,'only perfumaria is priced');
+ const script=readFileSync('public/catalogo.js','utf8');
+ assert.ok(script.includes('product-price')&&script.includes('PortelaCatalog.price(p)'));
+ const m=conversion.message({product:priced[0],url:'https://portela.test/?produto='+priced[0].id});
+ assert.ok(!/R\$/.test(m),'WhatsApp message must not carry the price');
+});
+test('new perfumaria items keep the vitrine cutout used by the cards',()=>{
+ for(const p of perfumes.filter(p=>Number(p.id.slice(3))>=900041))assert.ok(existsSync('public/media/vitrine/'+p.id.toLowerCase()+'.webp'),p.id);
 });

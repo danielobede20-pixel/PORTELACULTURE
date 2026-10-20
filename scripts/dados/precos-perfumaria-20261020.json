@@ -1,0 +1,384 @@
+{
+ "precos": {
+  "PC-900001": 171.9,
+  "PC-900002": 152.9,
+  "PC-900003": 154.9,
+  "PC-900004": 219.9,
+  "PC-900005": 187.9,
+  "PC-900006": 236.9,
+  "PC-900007": 142.9,
+  "PC-900008": 216.9,
+  "PC-900009": 282.9,
+  "PC-900010": 204.9,
+  "PC-900011": 312.9,
+  "PC-900013": 234.9,
+  "PC-900015": 221.9,
+  "PC-900016": 169.9,
+  "PC-900017": 154.9,
+  "PC-900018": 152.9,
+  "PC-900019": 238.9,
+  "PC-900020": 225.9,
+  "PC-900021": 240.9,
+  "PC-900023": 515.9,
+  "PC-900024": 474.9,
+  "PC-900025": 678.9,
+  "PC-900026": 406.9,
+  "PC-900027": 356.9,
+  "PC-900029": 217.9,
+  "PC-900030": 587.9,
+  "PC-900031": 450.9,
+  "PC-900032": 450.9,
+  "PC-900033": 385.9,
+  "PC-900034": 394.9,
+  "PC-900035": 394.9,
+  "PC-900036": 459.9,
+  "PC-900038": 672.9,
+  "PC-900039": 494.9,
+  "PC-900040": 246.9
+ },
+ "novos": [
+  {
+   "id": "PC-900041",
+   "nome": "LATTAFA YARA EDP F 100ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900041-lattafa-yara-edp-f-100ml.webp"
+   ],
+   "preco": 204.9
+  },
+  {
+   "id": "PC-900042",
+   "nome": "LATTAFA YARA TOUS EDP F 100ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900042-lattafa-yara-tous-edp-f-100ml.webp"
+   ],
+   "preco": 160.9
+  },
+  {
+   "id": "PC-900043",
+   "nome": "LATTAFA KHAMRAH QAHWA EDP 100ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Unissex",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900043-lattafa-khamrah-qahwa-edp-100ml.webp"
+   ],
+   "preco": 229.9
+  },
+  {
+   "id": "PC-900044",
+   "nome": "LATTAFA ASAD BOURBON EDP M 100ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900044-lattafa-asad-bourbon-edp-m-100ml.webp"
+   ],
+   "preco": 267.9
+  },
+  {
+   "id": "PC-900045",
+   "nome": "LATTAFA ANA ABIYEDH ROUGE EDP 60ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Unissex",
+   "concentracao": "EDP",
+   "volume": 60,
+   "fotos": [
+    "media/perfumaria/pc-900045-lattafa-ana-abiyedh-rouge-edp-60ml.webp"
+   ],
+   "preco": 119.9
+  },
+  {
+   "id": "PC-900046",
+   "nome": "LATTAFA HAYAATI AL MALEKY EDP M 100ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900046-lattafa-hayaati-al-maleky-edp-m-100ml.webp"
+   ],
+   "preco": 173.9
+  },
+  {
+   "id": "PC-900047",
+   "nome": "AFNAN 9PM EDP M 100ML",
+   "marca": "AFNAN",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900047-afnan-9pm-edp-m-100ml.webp"
+   ],
+   "preco": 211.9
+  },
+  {
+   "id": "PC-900048",
+   "nome": "AFNAN 9PM POUR FEMME EDP F 100ML",
+   "marca": "AFNAN",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900048-afnan-9pm-pour-femme-edp-f-100ml.webp"
+   ],
+   "preco": 248.9
+  },
+  {
+   "id": "PC-900049",
+   "nome": "ARMAF CLUB DE NUIT INTENSE EDT M 105ML",
+   "marca": "ARMAF NICHE",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDT",
+   "volume": 105,
+   "fotos": [
+    "media/perfumaria/pc-900049-armaf-club-de-nuit-intense-edt-m-105ml.webp"
+   ],
+   "preco": 204.9
+  },
+  {
+   "id": "PC-900050",
+   "nome": "ARMAF CLUB DE NUIT INTENSE WOMAN EDP F 105ML",
+   "marca": "ARMAF NICHE",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 105,
+   "fotos": [
+    "media/perfumaria/pc-900050-armaf-club-de-nuit-intense-woman-edp-f-105ml.webp"
+   ],
+   "preco": 234.9
+  },
+  {
+   "id": "PC-900051",
+   "nome": "ARMAF ODYSSEY HOMME EDP M 100ML",
+   "marca": "ARMAF NICHE",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900051-armaf-odyssey-homme-edp-m-100ml.webp"
+   ],
+   "preco": 185.9
+  },
+  {
+   "id": "PC-900052",
+   "nome": "RASASI HAWAS FOR HER EDP F 100ML",
+   "marca": "RASASI",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900052-rasasi-hawas-for-her-edp-f-100ml.webp"
+   ],
+   "preco": 170.9
+  },
+  {
+   "id": "PC-900053",
+   "nome": "RASASI HAWAS BLACK EDP M 100ML",
+   "marca": "RASASI",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900053-rasasi-hawas-black-edp-m-100ml.webp"
+   ],
+   "preco": 260.9
+  },
+  {
+   "id": "PC-900054",
+   "nome": "FRENCH AVENUE LIQUID BRUN EDP M 100ML",
+   "marca": "FRENCH AVENUE",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900054-french-avenue-liquid-brun-edp-m-100ml.webp"
+   ],
+   "preco": 269.9
+  },
+  {
+   "id": "PC-900055",
+   "nome": "MAISON ALHAMBRA DELILAH EDP F 100ML",
+   "marca": "MAISON ALHAMBRA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900055-maison-alhambra-delilah-edp-f-100ml.webp"
+   ],
+   "preco": 204.9
+  },
+  {
+   "id": "PC-900056",
+   "nome": "VICTORIA'S SECRET PURE SEDUCTION BODY SPLASH 250ML",
+   "marca": "VICTORIA'S SECRET",
+   "categoria": "perfumaria",
+   "subtipo": "Body Splash",
+   "linha": "Body Splash",
+   "genero": "Feminino",
+   "volume": 250,
+   "fotos": [
+    "media/perfumaria/pc-900056-victoria-s-secret-pure-seduction-body-splash-250ml.webp"
+   ],
+   "preco": 133.9
+  },
+  {
+   "id": "PC-900057",
+   "nome": "VICTORIA'S SECRET LOVE SPELL BODY LOTION 236ML",
+   "marca": "VICTORIA'S SECRET",
+   "categoria": "perfumaria",
+   "subtipo": "Hidratante",
+   "linha": "Hidratante",
+   "genero": "Feminino",
+   "volume": 236,
+   "fotos": [
+    "media/perfumaria/pc-900057-victoria-s-secret-love-spell-body-lotion-236ml.webp"
+   ],
+   "preco": 128.9
+  },
+  {
+   "id": "PC-900058",
+   "nome": "KIT LATTAFA ASAD COLLECTION EDP 4 peças 25ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Kit",
+   "linha": "Kit",
+   "genero": "Masculino",
+   "concentracao": "EDP",
+   "volume": 25,
+   "fotos": [
+    "media/perfumaria/pc-900058-kit-lattafa-asad-collection-edp-4-pecas-25ml.webp"
+   ],
+   "preco": 310.9
+  },
+  {
+   "id": "PC-900059",
+   "nome": "KIT LATTAFA YARA COLLECTION EDP 4 peças 25ML",
+   "marca": "LATTAFA",
+   "categoria": "perfumaria",
+   "subtipo": "Kit",
+   "linha": "Kit",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 25,
+   "fotos": [
+    "media/perfumaria/pc-900059-kit-lattafa-yara-collection-edp-4-pecas-25ml.webp"
+   ],
+   "preco": 325.9
+  },
+  {
+   "id": "PC-900060",
+   "nome": "CAROLINA HERRERA BAD BOY EDT M 100ML",
+   "marca": "CAROLINA HERRERA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Masculino",
+   "concentracao": "EDT",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900060-carolina-herrera-bad-boy-edt-m-100ml.webp"
+   ],
+   "preco": 550.9
+  },
+  {
+   "id": "PC-900061",
+   "nome": "CAROLINA HERRERA GOOD GIRL EDP F 80ML",
+   "marca": "CAROLINA HERRERA",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 80,
+   "fotos": [
+    "media/perfumaria/pc-900061-carolina-herrera-good-girl-edp-f-80ml.webp"
+   ],
+   "preco": 763.9
+  },
+  {
+   "id": "PC-900062",
+   "nome": "LANCÔME LA VIE EST BELLE EDP F 100ML",
+   "marca": "LANCÔME",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Feminino",
+   "concentracao": "EDP",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900062-lancome-la-vie-est-belle-edp-f-100ml.webp"
+   ],
+   "preco": 706.9
+  },
+  {
+   "id": "PC-900063",
+   "nome": "CALVIN KLEIN CK ONE EDT 100ML",
+   "marca": "CALVIN KLEIN",
+   "categoria": "perfumaria",
+   "subtipo": "Perfume",
+   "linha": "Perfume",
+   "genero": "Unissex",
+   "concentracao": "EDT",
+   "volume": 100,
+   "fotos": [
+    "media/perfumaria/pc-900063-calvin-klein-ck-one-edt-100ml.webp"
+   ],
+   "preco": 274.9
+  }
+ ]
+}

@@ -11,13 +11,13 @@ const {mudancas}=JSON.parse(readFileSync('docs/v8-cat/manifesto.json','utf8'));
 const semV8Cat=items=>{const byId=new Map(items.map(p=>[p.id,structuredClone(p)]));for(const m of mudancas){const p=byId.get(m.id);assert.equal(p[m.campo]??null,m.depois,m.id+' '+m.campo);if(m.antes==null)delete p[m.campo];else p[m.campo]=m.antes;}return items.map(p=>byId.get(p.id));};
 
 test('catalog keeps 2818 unique ids with the same brand, category and photos',()=>{
- assert.equal(catalog.length,2818);
- assert.equal(new Set(catalog.map(p=>p.id)).size,2818);
+ assert.equal(catalog.length,2841); // 20/10: +23 perfumes no fim
+ assert.equal(new Set(catalog.map(p=>p.id)).size,2841);
  for(const p of catalog){
   assert.match(p.id,/^PC-\d+$/);
   assert.ok(p.fotos?.length>0,p.id);
  }
- const hash=createHash('sha256').update(JSON.stringify(semV8Cat(catalog).map(p=>[p.id,p.marca,category(p),p.fotos]))).digest('hex');
+ const hash=createHash('sha256').update(JSON.stringify(semV8Cat(catalog.slice(0,2818)).map(p=>[p.id,p.marca,category(p),p.fotos]))).digest('hex');
  assert.equal(hash,'5070ce1c56024aa3300577ca57e6afd0bd7261bf8f9f64bb3dc358193114e3a3');
 });
 
