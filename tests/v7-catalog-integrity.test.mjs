@@ -2,7 +2,9 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {reverterCapas,lerAplicadas} from '../scripts/capas-reverter.mjs';
 const catalog=JSON.parse(readFileSync('public/catalogo.json','utf8'));
+const aplicadas=lerAplicadas(); // CAPAS-20261021: troca de capa autorizada, revertida em memoria antes do hash (scripts/dados/capas-aplicadas.json)
 const assets=JSON.parse(readFileSync('worker/catalog-assets.json','utf8'));
 const ui=readFileSync('public/catalogo.js','utf8');
 const category=p=>p.categoria||'tenis';
@@ -19,7 +21,7 @@ test('catalog keeps 2818 unique ids with the same brand, category and photos',()
  }
  // 21/10: descontadas as mudancas autorizadas: PC-1631 removido (posicao 1623, dentro dos 2818 => fatia 2817) e campo "genero" em roupas (nao entra neste hash, mas normaliza igual ao outro teste).
  const removidos=new Set(JSON.parse(readFileSync('scripts/dados/remover-ids.json','utf8')));
- const normalizado=catalog.filter(p=>!removidos.has(p.id)).map(p=>{if(p.categoria!=='roupas')return p;const {genero,...r}=p;return r;});
+ const normalizado=reverterCapas(catalog,aplicadas).filter(p=>!removidos.has(p.id)).map(p=>{if(p.categoria!=='roupas')return p;const {genero,...r}=p;return r;});
  const hash=createHash('sha256').update(JSON.stringify(semV8Cat(normalizado.slice(0,2817)).map(p=>[p.id,p.marca,category(p),p.fotos]))).digest('hex');
  // 21/10: hash derivado da base dcedca2 com a mesma normalizacao (o antigo 5070ce1c... valia para a base crua de 2818).
  assert.equal(hash,'12ead17134a5df48a5dbf67ba3c1b00438db8b8e2bc9a1f34e6235d2d4ccf2b6');
