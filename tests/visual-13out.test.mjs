@@ -29,9 +29,9 @@ test('links externos em nova aba usam rel=noopener', () => {
   assert.deepEqual(sem, []);
 });
 
-test('catalogo integral de 2850 produtos com ids unicos (2818 + 32 perfumes em 20/10)', () => {
-  assert.equal(catalog.length, 2850);
-  assert.equal(new Set(catalog.map(p => p.id)).size, 2850);
+test('catalogo integral de 2849 produtos com ids unicos (2818 + 32 perfumes em 20/10)', () => {
+  assert.equal(catalog.length, 2849);
+  assert.equal(new Set(catalog.map(p => p.id)).size, 2849);
 });
 
 test('abertura usa o brasao oficial integrado ao marmore, com a arte original preservada', () => {

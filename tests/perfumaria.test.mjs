@@ -18,10 +18,10 @@ test('perfumaria has 72 items, each with a local image and complete labels',()=>
 test('gender, brand and type filters combine inside perfumaria only',()=>{
  const pick=selection=>perfumes.filter(p=>core.matches(p,{category:'perfumaria',...selection}));
  assert.equal(pick({}).length,72);
- assert.ok(pick({gender:'Feminino'}).every(p=>p.genero==='Feminino')&&pick({gender:'Feminino'}).length>0);
+  assert.equal(pick({gender:'Feminino'}).length,0,'21/10: perfumes nunca entram no filtro Masculino/Feminino (que e de roupas)');
  assert.ok(pick({kind:'Kit'}).every(p=>p.subtipo==='Kit')&&pick({kind:'Kit'}).length>0);
  assert.equal(['Kit','Perfume','Body Splash','Hidratante'].reduce((n,kind)=>n+pick({kind}).length,0),72);
- const brand=perfumes[0].marca,combined=pick({brand,gender:perfumes[0].genero,kind:perfumes[0].subtipo});
+ const brand=perfumes[0].marca,combined=pick({brand,kind:perfumes[0].subtipo});
  assert.ok(combined.includes(perfumes[0])&&combined.every(p=>p.marca===brand));
  assert.equal(catalog.filter(p=>p.categoria!=='perfumaria'&&core.matches(p,{category:'perfumaria'})).length,0);
 });
@@ -54,8 +54,9 @@ test('public catalog exposes no private supplier metadata or yuan/yen prices',()
 });
 test('perfumaria route and filter controls exist in the page and script',()=>{
  const html=readFileSync('public/index.html','utf8'),script=readFileSync('public/catalogo.js','utf8');
- // 19/10: filtros removidos; perfumes abrem direto e os generos vem pelo menu e pelo painel Pesquisar.
- for(const g of ['Unissex','Masculino','Feminino'])assert.ok(html.includes('data-catalog-gender="'+g+'"'),g);
+  // 21/10: perfumes sem filtro de genero; Masculino/Feminino do menu levam a roupas.
+  for(const g of ['Masculino','Feminino'])assert.ok(html.includes('data-catalog-gender="'+g+'"'),g);
+  assert.ok(!html.includes('data-catalog-gender="Unissex"'));
  assert.ok(html.includes('data-catalog-category="perfumaria"'),'Perfumaria must be visible in the home categories');
  assert.ok(script.includes("params.get('categoria')")&&script.includes("'Consultar'"));
 });

@@ -31,13 +31,14 @@ test('imagens e referencias da home existem no catalogo real', () => {
   }
 });
 
-test('UNISSEX visivel no menu e nas categorias usando dado verificado do catalogo', () => {
-  const unissex = catalog.filter(p => p.genero === 'Unissex');
-  assert.ok(unissex.length > 0);
-  assert.ok(unissex.every(p => p.categoria === 'perfumaria'));
-  assert.ok(byId.get('PC-900001').genero === 'Unissex');
-  assert.ok((html.match(/data-catalog-gender="Unissex" href="\?genero=Unissex#catalogo"/g) || []).length >= 3);
-  for (const g of ['Masculino', 'Feminino']) assert.ok(catalog.some(p => p.genero === g), g);
+test('Unissex nao e categoria; Masculino e Feminino levam a roupas (dado verificado)', () => {
+  assert.equal(byId.get('PC-900001').genero, 'Unissex'); // continua como informacao do perfume
+  assert.ok(catalog.filter(p => p.genero === 'Unissex').every(p => ['perfumaria', 'roupas'].includes(p.categoria)));
+  assert.doesNotMatch(html, /data-catalog-gender="Unissex"|genero=Unissex|category-unissex|cat-unissex/);
+  for (const g of ['Masculino', 'Feminino']) {
+    assert.ok(catalog.some(p => p.categoria === 'perfumaria' && p.genero === g), g);
+    assert.ok((html.match(new RegExp('data-catalog-gender="' + g + '" href="\\?categoria=roupas&genero=' + g + '#catalogo"', 'g')) || []).length >= 2, g);
+  }
 });
 
 test('sem precos, frete gratis, parcelamento ou carrinho inventados', () => {

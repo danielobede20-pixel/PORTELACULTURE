@@ -34,6 +34,7 @@ test('every catalog product is reachable through its brand and model without typ
  const page=readFileSync('public/index.html','utf8');
  // 19/10: catalogo direto por categoria (pedido do Daniel); marca e modelo seguem acessiveis pelo menu MARCAS.
  assert.match(page,/id="nav-brands"/);
- assert.match(page,/class="catalog-chips"/);
- for (const cat of ['perfumaria','tenis','roupas','acessorios']) assert.match(page,new RegExp('data-chip data-catalog-category="'+cat+'"'));
+  // 21/10: a barra de chips repetia o menu principal e foi removida; o menu cobre as 4 categorias.
+  assert.doesNotMatch(page,/catalog-chips|data-chip/);
+  for (const cat of ['perfumaria','tenis','roupas','acessorios']) assert.match(page,new RegExp('<a data-catalog-category="'+cat+'"'));
 });

@@ -16,6 +16,10 @@ const nav = document.querySelector('#nav');
 function closeMenu() { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.setAttribute('aria-label', 'Abrir menu'); menu.textContent = '⋮'; }
 menu.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); menu.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu'); menu.textContent = open ? '×' : '⋮'; if (open) menuControls()[0]?.focus(); });
 nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
+const brandsMenu = nav.querySelector('.nav-brands');
+const closeBrands = () => { if (!brandsMenu || !brandsMenu.open) return; brandsMenu.open = false; brandsMenu.querySelectorAll('details').forEach(d => { d.open = false; }); };
+document.addEventListener('click', e => { if (brandsMenu && (!brandsMenu.contains(e.target) || e.target.closest('a'))) closeBrands(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBrands(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); menu.focus(); } });
 const menuControls = () => [...nav.querySelectorAll('a,summary')].filter(el => el.getClientRects().length);
 nav.addEventListener('keydown', e => { if (e.key !== 'Tab' || !nav.classList.contains('open')) return; const controls = menuControls(); if ((!e.shiftKey && e.target === controls.at(-1)) || (e.shiftKey && e.target === controls[0])) { e.preventDefault(); menu.focus(); } });
@@ -53,16 +57,19 @@ function makeLink(text, maker, line='', type='') {
 }
 function selectionTitle() {
   if (selection.brand) return PortelaCatalog.label(selection.brand) + (selection.line ? ' · ' + selection.line : '');
-  if (selection.gender) return (selection.category ? CATEGORY_LABELS[selection.category] + ' · ' : '') + selection.gender;
+  if (selection.gender) return 'Roupas ' + (selection.gender === 'Feminino' ? 'femininas' : 'masculinas');
   return CATEGORY_LABELS[selection.category] || 'Todos os produtos';
 }
 function updateNavigation() {
   document.querySelector('#catalog-heading').textContent = selectionTitle();
-  document.querySelectorAll('.catalog-chips [data-chip]').forEach(chip => {
-    const active = !selection.brand && !selection.line && (chip.dataset.catalogCategory || '') === selection.category && (chip.dataset.catalogGender || '') === selection.gender;
-    chip.setAttribute('aria-pressed', String(active));
-    if (active && chip.parentElement) chip.parentElement.scrollLeft = Math.max(0, chip.offsetLeft - chip.parentElement.offsetLeft - 16);
+  const any = selection.brand || selection.line || selection.category || selection.gender || selection.kind;
+  document.querySelector('#catalog-back').hidden = !any;
+  document.querySelectorAll('#nav .nav-inner > a[data-catalog-category], #nav .nav-inner > a[data-catalog-gender]').forEach(link => {
+    const active = !selection.brand && !selection.line && (link.dataset.catalogCategory || '') === selection.category && (link.dataset.catalogGender || '') === selection.gender;
+    if (active) link.setAttribute('aria-current', 'true'); else link.removeAttribute('aria-current');
   });
+  const brandsSummary = document.querySelector('#nav .nav-brands > summary');
+  if (brandsSummary) { if (selection.brand) brandsSummary.setAttribute('aria-current', 'true'); else brandsSummary.removeAttribute('aria-current'); }
 }
 function buildBrandMenu() {
   const container=document.querySelector('#nav-brands');container.replaceChildren();
@@ -111,9 +118,9 @@ const searchDialog = document.querySelector('#pesquisar');
 function buildSearchPanel() {
   const list = searchDialog?.querySelector('.search-list'); if (!list) return;
   const counts = new Map(); data.forEach(p => counts.set(p.categoria || 'tenis', (counts.get(p.categoria || 'tenis') || 0) + 1));
-  const genders = new Map(); data.forEach(p => p.genero && genders.set(p.genero, (genders.get(p.genero) || 0) + 1));
+  const clothesFor = g => data.filter(p => PortelaCatalog.matches(p, {category:'roupas', gender:g})).length;
   const entries = [...Object.keys(CATEGORY_LABELS).filter(k => counts.has(k)).map(k => ({label:CATEGORY_LABELS[k], count:counts.get(k), cat:k})),
-    ...['Unissex', 'Masculino', 'Feminino'].filter(g => genders.has(g)).map(g => ({label:g, count:genders.get(g), gender:g}))];
+    ...['Masculino', 'Feminino'].filter(g => clothesFor(g)).map(g => ({label:g, count:clothesFor(g), cat:'roupas', gender:g}))];
   list.replaceChildren(...entries.map(item => { const a = document.createElement('a'), name = document.createElement('span'), n = document.createElement('small');
     a.href = catalogURL('', '', item.cat || '', item.gender || ''); if (item.cat) a.dataset.catalogCategory = item.cat; if (item.gender) a.dataset.catalogGender = item.gender;
     name.textContent = item.label; n.textContent = item.count + (item.count === 1 ? ' produto' : ' produtos'); a.append(name, n); return a; }));
@@ -123,18 +130,18 @@ searchDialog?.querySelector('.close')?.addEventListener('click', () => searchDia
 searchDialog?.addEventListener('click', e => { if (e.target === searchDialog) searchDialog.close(); });
 dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
-fetch('catalogo.json?v=22',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
+fetch('catalogo.json?v=23',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
   data = PortelaCatalog.visibleProducts(items);
   const quizBrand=document.querySelector('#quiz-form select[name="brand"]');
   if (quizBrand) { quizBrand.replaceChildren(new Option('Prefiro não informar',''));
   [...new Set(data.map(p=>p.marca))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(value=>quizBrand.add(new Option(value,value)));
   quizBrand.add(new Option('Quero descobrir opções','Descobrir'));quizBrand.add(new Option('Outra marca','Outra'));quizBrand.add(new Option('Sem preferência','Sem preferencia')); }
-  const perfumeOptions=PortelaCatalog.perfumeOptions(data), categories=new Set(data.map(p=>p.categoria||'tenis')), genders=new Set(data.map(p=>p.genero).filter(Boolean));
+  const perfumeOptions=PortelaCatalog.perfumeOptions(data), categories=new Set(data.map(p=>p.categoria||'tenis'));
   buildBrandMenu(); buildSearchPanel();
   const params=new URLSearchParams(location.search),requested=params.get('produto');
   const maker=params.get('marca')||'', type=params.get('categoria')||'', line=params.get('linha')||'';
-  const group=PortelaCatalog.groups(data).find(g=>g.brand===maker);
-  selection={brand:group ? maker : '',line:(group?.lines.some(l=>l.name===line) || (type==='acessorios' && data.some(p=>p.categoria==='acessorios' && PortelaCatalog.line(p)===line))) ? line : '',category:maker==='Alo' ? 'roupas' : categories.has(type) ? type : '',gender:genders.has(params.get('genero')) ? params.get('genero') : '',kind:''};
+  const group=PortelaCatalog.groups(data).find(g=>g.brand===maker), genderParam=['Masculino','Feminino'].includes(params.get('genero')) ? params.get('genero') : '';
+  selection={brand:group ? maker : '',line:(group?.lines.some(l=>l.name===line) || (type==='acessorios' && data.some(p=>p.categoria==='acessorios' && PortelaCatalog.line(p)===line))) ? line : '',category:(maker==='Alo' || genderParam) ? 'roupas' : categories.has(type) ? type : '',gender:genderParam,kind:''};
   if(selection.category==='perfumaria')selection.kind=perfumeOptions.kind.includes(params.get('tipo')) ? params.get('tipo') : '';
   query=(params.get('busca')||'').slice(0,60);updateNavigation();render();
   const curated = document.querySelector('#curated');

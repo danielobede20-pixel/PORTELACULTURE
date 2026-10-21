@@ -9,8 +9,13 @@ const PortelaCatalog = (() => {
     if (name.includes('force 58')) return 'SB Force 58';
     return p.categoria === 'roupas' ? 'Roupas' : p.categoria === 'acessorios' ? 'Acessórios' : 'Outros modelos';
   }
+  // Masculino/Feminino valem so para roupas; "Unissex" na roupa serve aos dois. Perfumes nunca entram.
+  function genderMatch(p, gender) {
+    if (!gender) return true;
+    return p.categoria === 'roupas' && (p.genero === gender || p.genero === 'Unissex');
+  }
   function matches(p, selection = {}) {
-    return (!selection.brand || p.marca === selection.brand) && (!selection.category || (p.categoria || 'tenis') === selection.category) && (!selection.line || line(p) === selection.line) && (!selection.gender || p.genero === selection.gender) && (!selection.kind || p.subtipo === selection.kind);
+    return (!selection.brand || p.marca === selection.brand) && (!selection.category || (p.categoria || 'tenis') === selection.category) && (!selection.line || line(p) === selection.line) && genderMatch(p, selection.gender) && (!selection.kind || p.subtipo === selection.kind);
   }
   function brandForCategory(items, brand, category) {
     return brand && items.some(p => matches(p, {brand, category})) ? brand : '';
