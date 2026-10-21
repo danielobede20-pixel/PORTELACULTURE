@@ -31,6 +31,11 @@
     "tipo": "TROCAR",
     "indice": 1
   },
+  "PC-1713": {
+    "capa_original": "media/catalogo/colecao-20261010/PC-1713/001.webp",
+    "nova_capa": "media/capas-limpas/PC-1713.webp",
+    "tipo": "LIMPA_OK"
+  },
   "PC-2097": {
     "capa_original": "media/catalogo/colecao-20261010/PC-2097/001.webp",
     "nova_capa": "media/capas-limpas/PC-2097.webp",
