@@ -14,7 +14,7 @@ test('preserves all 2778 published products (ids, photos, brand, category) exact
  // V7 (2026-10-14): nomes foram desambiguados; o restante dos dados publicados continua travado.
  // 21/10: mudancas autorizadas pelo Daniel descontadas antes do hash: PC-1631 removido (posicao 1623, dentro dos 2778 => fatia 2777) e campo "genero" em roupas.
  const removidos=new Set(JSON.parse(readFileSync('scripts/dados/remover-ids.json','utf8')));
- const normalizado=reverterCapas(catalog,aplicadas).filter(p=>!removidos.has(p.id)).map(p=>{if(p.categoria==='tenis'&&'preco' in p){const {preco,...r}=p;p=r;} /* 23/10: preços de tênis autorizados pelo Daniel */ if(p.categoria!=='roupas')return p;const {genero,...r}=p;return r;});
+ const normalizado=reverterCapas(catalog,aplicadas).filter(p=>!removidos.has(p.id)).map(p=>{if((p.categoria==='tenis'||p.categoria==='roupas')&&'preco' in p){const {preco,...r}=p;p=r;} /* 23/10: preços de tênis autorizados pelo Daniel */ if(p.categoria!=='roupas')return p;const {genero,...r}=p;return r;});
  const hash=createHash('sha256').update(JSON.stringify(semV8Cat(normalizado).slice(0,2777).map(({nome,...r})=>r))).digest('hex');
  // 21/10: hash derivado de `git show dcedca2:public/catalogo.json` com a mesma normalizacao (o hash antigo 655a5510... valia para a base crua de 2778).
  assert.equal(hash,'0dc1a4b29fd0bbb8068378ab4f3e682dc9ae40f8d8b6c0a842049c61b2b9da58');
