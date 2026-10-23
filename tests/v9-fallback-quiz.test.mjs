@@ -33,8 +33,8 @@ test('error handler swaps a broken image once and ignores a failing fallback (si
 });
 
 test('catalog fetch version is synchronized and cache policy is unchanged',()=>{
- assert.match(ui,/fetch\('catalogo\.json\?v=25',\{cache:'no-cache'\}\)/);
- assert.match(html,/catalogo\.js\?v=34/);
+ assert.match(ui,/fetch\('catalogo\.json\?v=26',\{cache:'no-cache'\}\)/);
+ assert.match(html,/catalogo\.js\?v=35/);
 });
 
 test('quiz offers Perfumaria in the category group',()=>{
