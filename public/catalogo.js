@@ -130,7 +130,7 @@ searchDialog?.querySelector('.close')?.addEventListener('click', () => searchDia
 searchDialog?.addEventListener('click', e => { if (e.target === searchDialog) searchDialog.close(); });
 dialog.querySelector('.close').addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', e => { if (e.target === dialog) { const rect = dialog.getBoundingClientRect(); if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) dialog.close(); } });
-fetch('catalogo.json?v=25',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
+fetch('catalogo.json?v=26',{cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); }).then(items => {
   data = PortelaCatalog.visibleProducts(items);
   const quizBrand=document.querySelector('#quiz-form select[name="brand"]');
   if (quizBrand) { quizBrand.replaceChildren(new Option('Prefiro não informar',''));

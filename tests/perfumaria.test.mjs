@@ -85,7 +85,9 @@ test('prices: public price is a positive BRL number, shown on card and detail, n
  for(const p of priced){assert.equal(typeof p.preco,'number',p.id);assert.ok(p.preco>50&&p.preco<2000,p.id+' preço fora da faixa');}
  assert.equal(core.price({preco:152.9}),'R$ 152,90'.replace(' ',String.fromCharCode(160)).replace(String.fromCharCode(160),' '));
  assert.equal(core.price({}),'');
- assert.equal(catalog.filter(p=>p.categoria!=='perfumaria'&&'preco' in p).length,0,'only perfumaria is priced');
+ // 23/10: Daniel autorizou preço em tênis (regra: max(50% do oficial, piso R$ 539,90)). Roupas e acessórios seguem sem preço.
+ const outros=catalog.filter(p=>p.categoria!=='perfumaria'&&'preco' in p);
+ for(const p of outros){assert.equal(p.categoria,'tenis',p.id+' só tênis pode ter preço fora da perfumaria');assert.equal(typeof p.preco,'number',p.id);assert.ok(p.preco>=539.9&&p.preco<2000,p.id+' preço de tênis fora da faixa');}
  const script=readFileSync('public/catalogo.js','utf8');
  assert.ok(script.includes('product-price')&&script.includes('PortelaCatalog.price(p)'));
  const m=conversion.message({product:priced[0],url:'https://portela.test/?produto='+priced[0].id});
