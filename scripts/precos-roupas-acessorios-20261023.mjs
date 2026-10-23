@@ -7,7 +7,7 @@ const COLLAB = / x |\bLV\b|Louis Vuitton|Hello Kitty|CS:?GO|Just Do It|Green App
 const INF = /infantil|juvenil|kids|\bGS\b|\bPS\b|\bTD\b/i;
 function precoRoupa(p) {
   const l = (p.linha || '').toLowerCase(), n = p.nome.toLowerCase();
-  if (/infantil/.test(l) || INF.test(p.nome)) return null;
+  if (/infantil/.test(l) || INF.test(p.nome)) return 79.9; // 19:51: infantil na faixa mais baixa
   if (/conjunto|camisetas e shorts|polos e shorts/.test(l)) return /moletom|calça|agasalho|fleece|jaqueta|manga longa/.test(n) ? 349.9 : 139.9;
   if (/^(shorts|bermudas?)$/.test(l)) return 79.9;
   if (/manga longa/.test(l)) return 199.9;
@@ -24,12 +24,17 @@ function precoAcessorio(p) {
   if (/^(bonés?|chapéus)$/.test(l)) return 119.9;
   if (/^meias$/.test(l)) return 39.9;
   if (/^(toucas|gorro de malha|balaclavas|faixas de cabeça|golas|luvas)$/.test(l)) return 69.9;
-  return null; // bolsas, mochilas, cinto, óculos, capas: sem custo, ficam sem preço
+  // 23/10 19:51: Daniel pediu catálogo completo; preço-base estimado por comparação
+  if (/^capas para celular$/.test(l)) return 59.9;
+  if (/^(cinto|óculos)$/.test(l)) return 149.9;
+  if (/^bolsas$/.test(l)) return 199.9;
+  if (/^mochilas$/.test(l)) return 249.9;
+  return 119.9; // qualquer outro acessório: faixa do boné
 }
 function preco(p) {
   if (p.categoria === 'roupas') return precoRoupa(p);
   if (p.categoria === 'acessorios') return precoAcessorio(p);
-  if (p.categoria === 'tenis' && p.preco == null && !COLLAB.test(p.nome) && !INF.test(p.nome)) return 539.9;
+  if (p.categoria === 'tenis' && p.preco == null) return COLLAB.test(p.nome) ? 749.9 : 539.9; // 19:51: collabs no teto, demais (inclusive infantis) no piso
   return null;
 }
 function carregar(f) { const txt = fs.readFileSync(f, 'utf8'); const bom = txt.charCodeAt(0) === 0xFEFF; return { j: JSON.parse(bom ? txt.slice(1) : txt), bom, nl: txt.includes('\r\n') ? '\r\n' : '\n', fim: /\n$/.test(txt) }; }
