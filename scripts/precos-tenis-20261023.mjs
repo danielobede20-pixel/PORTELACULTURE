@@ -12,7 +12,8 @@ for (const l of fs.readFileSync(REF, 'utf8').replace(/^﻿/, '').split(/\r?\n/).
   const [modelo, min, , , conf] = l.split(';');
   if (modelo && num(min) && /^(ALTA|MEDIA)$/.test((conf || '').trim())) refs.set(modelo.trim().toLowerCase(), { modelo: modelo.trim(), min: num(min) });
 }
-const preco = min => Math.max(Math.ceil(min * 0.5 / 10) * 10 - 0.1, PISO);
+const TETO = 749.9; // 23/10 19:24: Daniel pediu todos os tênis abaixo de R$ 750
+const preco = min => Math.min(Math.max(Math.ceil(min * 0.5 / 10) * 10 - 0.1, PISO), TETO);
 const marcaPrefixos = p => { const m = p.marca; return m === 'On' ? ['On Running', 'On'] : [m]; };
 function ref(p) {
   if (p.categoria !== 'tenis') return null;
@@ -30,7 +31,7 @@ function salvar(f, o) { let s = JSON.stringify(o.j, null, o.ind || undefined); i
 const arr = o => Array.isArray(o.j) ? o.j : Object.values(o.j).find(Array.isArray);
 const W = carregar('worker/catalog.json'), P = carregar('public/catalogo.json');
 const precos = new Map(); const porModelo = {}; let jaTinha = 0;
-for (const p of arr(W)) { const r = ref(p); if (!r) continue; if (p.preco != null) { jaTinha++; continue; } const v = Math.round(preco(r.min) * 100) / 100; precos.set(p.id, v); porModelo[r.modelo] = (porModelo[r.modelo] || 0) + 1; }
+for (const p of arr(W)) { const r = ref(p); if (!r) continue; const v = Math.round(preco(r.min) * 100) / 100; precos.set(p.id, v); porModelo[r.modelo] = (porModelo[r.modelo] || 0) + 1; }
 const tenis = arr(W).filter(p => p.categoria === 'tenis').length;
 let aplicW = 0, aplicP = 0;
 if (APLICAR) {
