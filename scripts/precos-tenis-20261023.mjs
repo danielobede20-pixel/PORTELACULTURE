@@ -31,7 +31,7 @@ function salvar(f, o) { let s = JSON.stringify(o.j, null, o.ind || undefined); i
 const arr = o => Array.isArray(o.j) ? o.j : Object.values(o.j).find(Array.isArray);
 const W = carregar('worker/catalog.json'), P = carregar('public/catalogo.json');
 const precos = new Map(); const porModelo = {}; let jaTinha = 0;
-for (const p of arr(W)) { const r = ref(p); if (!r) continue; const v = Math.round(preco(r.min) * 100) / 100; precos.set(p.id, v); porModelo[r.modelo] = (porModelo[r.modelo] || 0) + 1; }
+for (const p of arr(W)) { const r = ref(p); if (!r) continue; const v = /vomero/i.test(r.modelo) ? 699.9 /* 23/10 19:26: Daniel pediu Vomero a R$ 699,90 */ : Math.round(preco(r.min) * 100) / 100; precos.set(p.id, v); porModelo[r.modelo] = (porModelo[r.modelo] || 0) + 1; }
 const tenis = arr(W).filter(p => p.categoria === 'tenis').length;
 let aplicW = 0, aplicP = 0;
 if (APLICAR) {
