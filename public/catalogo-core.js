@@ -2,20 +2,24 @@ const PortelaCatalog = (() => {
   const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   function visibleProducts(items) { return items.filter(p => p.marca !== 'Alo' || p.categoria === 'roupas'); }
   function label(brand) { return brand === 'On' ? 'On Running' : brand; }
+  // Acessorios: o fornecedor grava singular e plural do mesmo tipo; o menu mostra um item so.
+  const ACCESSORY_ALIASES = {'Boné': 'Bonés', 'Cinto': 'Cintos'};
   function line(p) {
-    if (p.linha) return p.linha;
+    if (p.linha) return p.categoria === 'acessorios' ? (ACCESSORY_ALIASES[p.linha] || p.linha) : p.linha;
     const name = normalize(p.nome);
     if (name.includes('dunk')) return name.includes('sb') ? 'Dunk SB' : name.includes('high') ? 'Dunk High' : 'Dunk Low';
     if (name.includes('force 58')) return 'SB Force 58';
     return p.categoria === 'roupas' ? 'Roupas' : p.categoria === 'acessorios' ? 'Acessórios' : 'Outros modelos';
   }
-  // Masculino/Feminino valem so para roupas; "Unissex" na roupa serve aos dois. Perfumes nunca entram.
-  function genderMatch(p, gender) {
+  // Masculino/Feminino: roupas por padrao; perfumes so quando a categoria Perfumes esta escolhida
+  // (submenu Perfumes > Masculino/Feminino, 24/10). "Unissex" serve aos dois.
+  function genderMatch(p, gender, category) {
     if (!gender) return true;
-    return p.categoria === 'roupas' && (p.genero === gender || p.genero === 'Unissex');
+    const scope = category === 'perfumaria' ? 'perfumaria' : 'roupas';
+    return p.categoria === scope && (p.genero === gender || p.genero === 'Unissex');
   }
   function matches(p, selection = {}) {
-    return (!selection.brand || p.marca === selection.brand) && (!selection.category || (p.categoria || 'tenis') === selection.category) && (!selection.line || line(p) === selection.line) && genderMatch(p, selection.gender) && (!selection.kind || p.subtipo === selection.kind);
+    return (!selection.brand || p.marca === selection.brand) && (!selection.category || (p.categoria || 'tenis') === selection.category) && (!selection.line || line(p) === selection.line) && genderMatch(p, selection.gender, selection.category) && (!selection.kind || p.subtipo === selection.kind);
   }
   function brandForCategory(items, brand, category) {
     return brand && items.some(p => matches(p, {brand, category})) ? brand : '';

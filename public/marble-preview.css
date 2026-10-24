@@ -252,3 +252,27 @@ button.header-search:hover{border-color:#0b0b0b;color:var(--ink)}
 .search-list small{font:600 .66rem/1 Inter,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#6b645a}
 #pesquisar :focus-visible{outline-color:#050505}
 @media(max-width:1020px){button.header-search{display:none}}
+
+/* 24/10: submenus de Perfumes, Tênis, Roupas e Acessórios (desktop e celular) */
+.nav-drop>summary{list-style:none}
+.nav-drop>summary::-webkit-details-marker{display:none}
+.nav-drop-panel{display:grid;padding:0 0 12px 14px}
+.links .nav-drop-panel>a{display:flex;align-items:center;min-height:44px;padding:8px 4px;font-size:.9rem;letter-spacing:0;line-height:1.4;color:#c6c5bd}
+.links .nav-drop-panel>a:first-child{color:#e1c98d}
+.links .nav-drop-panel a:hover{color:#e1c98d}
+.nav-drop-panel .nav-brand>summary{color:#ece6da}
+@media(min-width:1021px){
+  .nav-drop{position:relative}
+  .links .nav-drop>summary{min-height:0;padding:16px 0;color:#ece6da}
+  .nav-drop>summary:after{content:" ▾";color:#e1c98d}
+  .links .nav-drop>summary:hover,.links .nav-drop[open]>summary{color:#e1c98d}
+  .nav-drop[open]>.nav-drop-panel{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:min(300px,90vw);max-height:70vh;overflow:auto;padding:10px 20px;background:#0a0a0a;border:1px solid rgba(225,201,141,.25);box-shadow:0 24px 48px -16px #000;z-index:40}
+  .links .nav-drop-panel a{font-size:.78rem;font-weight:500;letter-spacing:.04em}
+  .links .nav-drop-panel .nav-brand>summary{font-size:.75rem;letter-spacing:.12em;padding:12px 4px}
+}
+@media(max-width:1020px){
+  .nav-drop{border-top:1px solid #1f1f1f}
+  .links .nav-drop>summary{min-height:0;padding:14px 0;font-size:.8rem;letter-spacing:.16em;color:#ece6da}
+  .nav-drop>summary:after{content:" +";color:#e1c98d}
+  .nav-drop[open]>summary:after{content:" −"}
+}

@@ -20,7 +20,8 @@ const ids = selection => clothes.filter(p => core.matches(p, selection)).map(p =
 
 test('menu principal: ordem final e sem Unissex', () => {
   const nav = html.match(/<nav class="links" id="nav"[\s\S]*?<\/nav>/)[0];
-  const labels = [...nav.matchAll(/<(?:a|summary)[^>]*>([^<]+)<\/(?:a|summary)>/g)].map(m => m[1]);
+  // 24/10: as 4 categorias viraram submenus; o "Ver todos" de cada painel fica fora da contagem.
+  const labels = [...nav.replace(/<div class="nav-drop-panel"[\s\S]*?<\/div>/g, '').matchAll(/<(?:a|summary)[^>]*>([^<]+)<\/(?:a|summary)>/g)].map(m => m[1]);
   assert.deepEqual(labels, ['PERFUMES', 'TÊNIS', 'ROUPAS', 'ACESSÓRIOS', 'MASCULINO', 'FEMININO', 'MARCAS', 'COMO PEDIR']);
   for (const g of ['Masculino', 'Feminino']) assert.match(nav, new RegExp('data-catalog-category="roupas" data-catalog-gender="' + g + '" href="\\?categoria=roupas&genero=' + g + '#catalogo"'));
 });
@@ -43,7 +44,7 @@ test('Masculino/Feminino filtram so roupas; Unissex de roupa vale para os dois',
   assert.equal(ids({category: 'roupas', gender: 'Masculino'}), 'm,u');
   assert.equal(ids({category: 'roupas', gender: 'Feminino'}), 'f,u');
   assert.equal(ids({gender: 'Masculino'}), 'm,u', 'sem categoria, perfume e tenis continuam fora');
-  assert.equal(ids({category: 'perfumaria', gender: 'Feminino'}), '', 'perfumes nao tem filtro de genero');
+  assert.equal(ids({category: 'perfumaria', gender: 'Feminino'}), 'p', '24/10: dentro de Perfumes o genero filtra perfumes');
   assert.equal(ids({category: 'perfumaria'}), 'p');
   assert.equal(ids({category: 'tenis'}), 't', 'tenis: masculinos e femininos juntos');
 });
@@ -57,7 +58,7 @@ test('no catalogo real, nenhum perfume, tenis ou acessorio entra em Masculino/Fe
 
 test('URL: ?genero= aceita so Masculino/Feminino (forca roupas); Unissex cai no catalogo geral', () => {
   assert.match(script, /\['Masculino','Feminino'\]\.includes\(params\.get\('genero'\)\)/);
-  assert.match(script, /category:\(maker==='Alo' \|\| genderParam\) \? 'roupas'/);
+  assert.match(script, /genderParam \? \(type==='perfumaria' \? 'perfumaria' : 'roupas'\)/, '24/10: genero sem categoria=perfumaria continua forcando roupas');
 });
 
 test('paineis Masculino/Feminino da home levam as roupas, sem falar de fragrancias', () => {

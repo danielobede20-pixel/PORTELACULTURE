@@ -62,3 +62,5 @@
 /* Menu principal: item ativo (dourado discreto) */
 .links .nav-inner > a[aria-current="true"], .links .nav-brands > summary[aria-current="true"] { color: #e1c98d; }
 @media (min-width: 1021px) { .links .nav-inner > a[aria-current="true"]:after { opacity: 1; transform: scaleX(1); } }
+
+.links .nav-drop > summary[aria-current="true"] { color: #e1c98d; }

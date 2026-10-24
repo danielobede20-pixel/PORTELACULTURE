@@ -18,7 +18,10 @@ test('perfumaria has 72 items, each with a local image and complete labels',()=>
 test('gender, brand and type filters combine inside perfumaria only',()=>{
  const pick=selection=>perfumes.filter(p=>core.matches(p,{category:'perfumaria',...selection}));
  assert.equal(pick({}).length,72);
-  assert.equal(pick({gender:'Feminino'}).length,0,'21/10: perfumes nunca entram no filtro Masculino/Feminino (que e de roupas)');
+  // 24/10: dentro de Perfumes, Masculino/Feminino filtram perfumes (Unissex entra nos dois); fora de Perfumes continuam so roupas.
+  assert.ok(pick({gender:'Feminino'}).length>0&&pick({gender:'Feminino'}).every(p=>['Feminino','Unissex'].includes(p.genero)));
+  assert.equal(catalog.filter(p=>p.categoria==='perfumaria'&&core.matches(p,{gender:'Feminino'})).length,0,'sem categoria, perfumes nao entram no Feminino');
+  assert.equal(catalog.filter(p=>p.categoria==='perfumaria'&&core.matches(p,{category:'roupas',gender:'Masculino'})).length,0);
  assert.ok(pick({kind:'Kit'}).every(p=>p.subtipo==='Kit')&&pick({kind:'Kit'}).length>0);
  assert.equal(['Kit','Perfume','Body Splash','Hidratante'].reduce((n,kind)=>n+pick({kind}).length,0),72);
  const brand=perfumes[0].marca,combined=pick({brand,kind:perfumes[0].subtipo});
