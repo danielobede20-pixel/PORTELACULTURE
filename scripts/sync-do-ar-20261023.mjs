@@ -5,7 +5,9 @@ const S = 'https://portela-culture.danielobede20.chatgpt.site/';
 const APLICAR = process.argv.includes('--aplicar');
 const get = async u => { const r = await fetch(S + u + (u.includes('?') ? '&' : '?') + 't=' + Date.now()); return r.ok ? await r.text() : null; };
 const norm = s => s.replace(/\r/g, '');
-const html = await get('');
+// O Cloudflare injeta um script de desafio (window.__CF$cv$params) no HTML a cada resposta: nunca salvar no repositório.
+const semCF = s => s.replace(/<script>\(function\(\)\{function c\(\)\{[\s\S]*?__CF\$cv\$params[\s\S]*?<\/script>/g, '');
+const html = semCF(await get(''));
 const refs = [...new Set([...html.matchAll(/(?:href|src)="([^"#:]+\.(?:css|js))(?:\?[^"]*)?"/g)].map(m => m[1]))];
 const files = ['index.html', ...refs];
 for (const f of files) {
