@@ -7,7 +7,7 @@
  let step=0,trigger=null;
  function link(options={}) {return 'https://wa.me/'+phone+'?text='+encodeURIComponent(core.message({...options,quiz}));}
  function refreshLinks() {
-  document.querySelectorAll('a[data-contact]').forEach(a=>{if(a.id==='order')return;const localProduct=a.classList.contains('whatsapp')?product:null;a.href=link({product:localProduct,category:a.dataset.category,use:a.dataset.use,url:localProduct?new URL('/?produto='+localProduct.id+'#catalogo',location.origin).href:location.origin+core.page(location.href)});});
+  document.querySelectorAll('a[data-contact]').forEach(a=>{if(a.id==='order'||a.id==='ia-contact')return;const localProduct=a.classList.contains('whatsapp')?product:null;a.href=link({product:localProduct,category:a.dataset.category,use:a.dataset.use,url:localProduct?new URL('/?produto='+localProduct.id+'#catalogo',location.origin).href:location.origin+core.page(location.href)});});
   if(product)document.dispatchEvent(new Event('portela-preferences'));
  }
  function status(text) {document.querySelectorAll('[data-save-status]').forEach(el=>el.textContent=text);document.querySelectorAll('[data-retry]').forEach(el=>el.hidden=!pending.size);}
@@ -17,7 +17,7 @@
  }
  function register(type,placement,opts={}) {const e={id:crypto.randomUUID(),...context,type,page:opts.product?'/?produto='+opts.product.id+'#catalogo':core.page(location.href),placement,productId:opts.product?.id||null,category:opts.product?(opts.product.categoria||'tenis'):opts.category||null,quiz:{...quiz}};pending.set(e.id,e);send(e);}
  document.querySelectorAll('[data-retry]').forEach(b=>b.addEventListener('click',()=>{status('Tentando registrar…');[...pending.values()].forEach(send);}));
- document.querySelectorAll('a[href*="wa.me"],#order').forEach(a=>{a.dataset.contact='true';a.rel='noopener';a.target='_blank';if(!a.dataset.placement) a.dataset.placement=a.id==='order'?'produto':a.classList.contains('whatsapp')?'flutuante':a.closest('section')?.id||'cta';let last=0;a.addEventListener('click',()=>{if(Date.now()-last<1200)return;last=Date.now();register('whatsapp_click',a.dataset.placement,{product:a.id==='order'||a.classList.contains('whatsapp')?product:null,category:a.dataset.category});});});
+ document.querySelectorAll('a[href*="wa.me"],#order,#ia-contact').forEach(a=>{a.dataset.contact='true';a.rel='noopener';a.target='_blank';if(!a.dataset.placement) a.dataset.placement=a.id==='order'?'produto':a.id==='ia-contact'?'assistente':a.classList.contains('whatsapp')?'flutuante':a.closest('section')?.id||'cta';let last=0;a.addEventListener('click',()=>{if(Date.now()-last<1200)return;last=Date.now();register('whatsapp_click',a.dataset.placement,{product:a.id==='order'||a.classList.contains('whatsapp')?product:null,category:a.dataset.category});});});
  function draw() {steps.forEach((el,i)=>el.hidden=i!==step);summary.hidden=step!==3;document.querySelector('#quiz-progress').textContent=step<3?'Etapa '+(step+1)+' de 3':'Suas preferências';back.hidden=step===0;next.hidden=step===3;next.textContent=step===2?'Concluir preferências':'Continuar';if(step<3)steps[step].querySelector('input,select')?.focus();}
  document.querySelectorAll('[data-open-quiz]').forEach(b=>b.addEventListener('click',()=>{trigger=b;step=0;quizDialog.showModal();draw();}));
  function close() {quizDialog.close();trigger?.focus();}
