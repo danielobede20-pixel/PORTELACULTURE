@@ -42,7 +42,14 @@ test('Unissex nao e categoria; Masculino e Feminino levam a roupas (dado verific
 });
 
 test('sem precos, frete gratis, parcelamento ou carrinho inventados', () => {
-  assert.doesNotMatch(html, /R\$\s?\d/);
+  // Precos so podem aparecer nos destaques e devem ser os do catalogo (02/11/2026).
+  const catalogo = JSON.parse(readFileSync(new URL('../public/catalogo.json', import.meta.url), 'utf8'));
+  const lista = Array.isArray(catalogo) ? catalogo : Object.values(catalogo)[0];
+  const precos = new Map(lista.map(p => [p.id, p.preco]));
+  const brl = v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const tags = [...html.matchAll(/<span class="show-price" data-price-id="(PC-\d+)">([^<]*)<\/span>/g)];
+  for (const [, id, txt] of tags) assert.equal(txt, brl(precos.get(id)), id);
+  assert.doesNotMatch(html.replace(/<span class="show-price"[^>]*>[^<]*<\/span>/g, ''), /R\$\s?\d/);
   assert.doesNotMatch(html, /frete gr[aá]tis|12x|parcel|carrinho|favoritos/i);
 });
 

@@ -64,3 +64,4 @@
 @media (min-width: 1021px) { .links .nav-inner > a[aria-current="true"]:after { opacity: 1; transform: scaleX(1); } }
 
 .links .nav-drop > summary[aria-current="true"] { color: #e1c98d; }
+.show-item .show-price{display:block;padding:2px 8px 0;font-size:.95rem;font-weight:700;letter-spacing:.02em;color:var(--gold-ink,#c9a227)}

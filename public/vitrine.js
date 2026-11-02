@@ -89,5 +89,17 @@
   }
   document.addEventListener('visibilitychange', start);
   reduce.addEventListener?.('change', () => { syncToggle(); start(); });
+
+  // Preço dos destaques: sincroniza com o catálogo (mesma URL do catalogo.js, aproveita o cache).
+  fetch('catalogo.json?v=27', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(data => {
+    const list = Array.isArray(data) ? data : data && Object.values(data)[0];
+    if (!Array.isArray(list)) return;
+    const byId = new Map(list.map(p => [p.id, p]));
+    track.querySelectorAll('[data-price-id]').forEach(el => {
+      const v = byId.get(el.dataset.priceId)?.preco;
+      if (typeof v === 'number' && v > 0) el.textContent = 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      else el.remove();
+    });
+  }).catch(() => {});
   syncToggle(); progress(); start();
 })();
