@@ -47,11 +47,5 @@ assert.equal(knowledge.produtos.length, canonicalCatalog.length);
 assert.equal(knowledge.ia_ativa, false);
 console.log(`Built attendance protection and knowledge routes verified with ${canonicalCatalog.length} products`);
 
-assert.deepEqual(await (await workerModule.default.fetch(new Request(origin + "/api/ia"), {})).json(), { enabled: false });
-const aiRequest = new Request(origin + "/api/ia", {
-  method: "POST",
-  headers: { origin, "content-type": "application/json" },
-  body: JSON.stringify({ messages: ["Quero ASICS"] }),
-});
-assert.equal((await workerModule.default.fetch(aiRequest, {})).status, 503);
-console.log("Built AI route fails closed when disabled");
+assert.equal((await workerModule.default.fetch(new Request(origin + "/api/ia"), {})).status, 404);
+console.log("Built Worker has no AI route (/api/ia -> 404)");
